@@ -6,7 +6,7 @@ namespace ClosetCompanionApp.Repository.Interfaces
     {
         Task AddAsync(GeneratedOutfit outfit);
         Task DeleteAsync(Guid id);
-        Task<GeneratedOutfit> GetByIdAsync(Guid id);
+        Task<GeneratedOutfit?> GetByIdAsync(Guid id);
         Task<IEnumerable<GeneratedOutfit>> GetAllAsync();
         Task<IEnumerable<GeneratedOutfit>> GetFavoritesAsync();
         Task UpdateAsync(GeneratedOutfit outfit);

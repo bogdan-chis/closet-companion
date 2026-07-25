@@ -35,5 +35,29 @@ namespace ClosetCompanionApp.Controller
                 return BadRequest(new { error = ex.Message });
             }
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var outfit = await _service.GetByIdAsync(id);
+            if (outfit == null)
+            {
+                return NotFound(new { message = $"Outfit with ID {id} was not found." });
+            }
+            return Ok(outfit);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteById(Guid id)
+        {
+            var outfit = await _service.GetByIdAsync(id);
+            if (outfit == null)
+            {
+                return NotFound(new { message = $"Outfit with ID {id} was not found." });
+            }
+
+            await _service.DeleteAsync(id);
+            return Ok(new { message = $"Outfit with ID {id} was successfully deleted." });
+        }
     }
 }

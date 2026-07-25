@@ -18,9 +18,14 @@ namespace ClosetCompanionApp.Repository.Implementations
             await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var outfit = await _context.GeneratedOutfits.FindAsync(id);
+            if (outfit != null)
+            {
+                _context.GeneratedOutfits.Remove(outfit);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<IEnumerable<GeneratedOutfit>> GetAllAsync()
@@ -28,9 +33,9 @@ namespace ClosetCompanionApp.Repository.Implementations
             return await _context.GeneratedOutfits.ToListAsync();
         }
 
-        public Task<GeneratedOutfit> GetByIdAsync(Guid id)
+        public async Task<GeneratedOutfit?> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.GeneratedOutfits.FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<IEnumerable<GeneratedOutfit>> GetFavoritesAsync()
