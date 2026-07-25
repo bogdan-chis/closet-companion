@@ -56,5 +56,13 @@ namespace ClosetCompanionApp.Service.Implementations
         public async Task<GeneratedOutfit?> GetByIdAsync(Guid id) => await _repository.GetByIdAsync(id);
 
         public async Task<IEnumerable<GeneratedOutfit>> GetFavouritesAsync() => await _repository.GetFavoritesAsync();
+
+        public async Task ToggleFavoriteAsync(Guid id)
+        {
+            var outfit = await _repository.GetByIdAsync(id);
+            if (outfit == null) return;
+                outfit.ToggleFavorite();
+            await _repository.UpdateAsync(outfit);
+        }
     }
 }

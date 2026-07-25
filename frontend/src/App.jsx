@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 import { getGarments, deleteGarment } from "./api/garments";
 import { getPoses, createPose } from "./api/poses";
-import { generateOutfit, getGeneratedOutfit } from "./api/outfits";
+import { generateOutfit, getGeneratedOutfit, getAllOutfits, toggleFavoriteOutfit } from "./api/outfits";
 import GarmentForm from "./components/GarmentForm";
 import GarmentList from "./components/GarmentList";
 import PoseGallery from "./components/PoseGallery";
 import OutfitBuilder from "./components/OutfitBuilder";
 import PasswordGate from "./components/PasswordGate";
+import HomeDashboard from "./components/HomeDashboard";
 import "./App.css";
 
 const EMPTY_SELECTION = { top: null, bottom: null, dress: null };
-
-// GenerationStatus enum on the backend — handled as either number or string
-// in case JsonStringEnumConverter gets added later.
 const isCompleted = (s) => s === 2 || s === "Completed";
 const isFailed = (s) => s === 3 || s === "Failed";
 
@@ -21,10 +19,12 @@ function App() {
     () => sessionStorage.getItem("catalina-closet-unlocked") === "true"
   );
 
-  const [view, setView] = useState("wardrobe");
+  // "home" | "wardrobe" | "outfit-builder" | "fitting-room"
+  const [view, setView] = useState("home");
 
   const [garments, setGarments] = useState([]);
   const [poses, setPoses] = useState([]);
+  const [outfits, setOutfits] = useState([]);
   const [selectedPoseId, setSelectedPoseId] = useState(null);
   const [outfitSelection, setOutfitSelection] = useState(EMPTY_SELECTION);
 
@@ -40,9 +40,14 @@ function App() {
 
   async function loadData() {
     try {
-      const [garmentsData, posesData] = await Promise.all([getGarments(), getPoses()]);
+      const [garmentsData, posesData, outfitsData] = await Promise.all([
+        getGarments(),
+        getPoses(),
+        getAllOutfits(),
+      ]);
       setGarments(garmentsData);
       setPoses(posesData);
+      setOutfits(outfitsData);
 
       if (posesData.length > 0) {
         const defaultPose = posesData.find((p) => p.isDefault) || posesData[0];
@@ -59,7 +64,6 @@ function App() {
     if (unlocked) loadData();
   }, [unlocked]);
 
-  // Poll while a generation is in flight
   useEffect(() => {
     if (!generationId) return;
     if (isCompleted(generationStatus) || isFailed(generationStatus)) return;
@@ -72,6 +76,10 @@ function App() {
         if (isCompleted(outfit.status)) {
           setGeneratedImageUrl(outfit.resultImageUrl);
           setIsGenerating(false);
+          setOutfits((prev) => {
+            const exists = prev.some((o) => o.id === outfit.id);
+            return exists ? prev.map((o) => (o.id === outfit.id ? outfit : o)) : [...prev, outfit];
+          });
         } else if (isFailed(outfit.status)) {
           setGenerationError(outfit.errorMessage || "Generarea a eșuat.");
           setIsGenerating(false);
@@ -105,6 +113,15 @@ function App() {
       });
       setPoses((prev) => [...prev, newPose]);
       setSelectedPoseId(newPose.id);
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  async function handleToggleFavorite(id) {
+    try {
+      await toggleFavoriteOutfit(id);
+      setOutfits((prev) => prev.map((o) => (o.id === id ? { ...o, isFavorite: !o.isFavorite } : o)));
     } catch (err) {
       setError(err.message);
     }
@@ -147,15 +164,26 @@ function App() {
   return (
     <div className="app-shell">
       <header className="masthead">
-        <h1 className="wordmark" onClick={() => setView("wardrobe")} style={{ cursor: "pointer" }}>
+        <h1 className="wordmark" onClick={() => setView("home")} style={{ cursor: "pointer" }}>
           Garderoba Cătălinei
         </h1>
         <p className="tagline">Hainele ei preferate, într-un singur loc</p>
       </header>
 
+      {view === "home" && (
+        <HomeDashboard
+          garments={garments}
+          outfits={outfits}
+          onToggleFavorite={handleToggleFavorite}
+          onGoToWardrobe={() => setView("wardrobe")}
+          onGoToGenerate={() => setView("outfit-builder")}
+        />
+      )}
+
       {view === "wardrobe" && (
         <>
           <div className="toolbar">
+            <button className="btn-add" onClick={() => setView("home")}>← Acasă</button>
             <span className="count-label">{loading ? "Se încarcă…" : countLabel}</span>
             <div className="toolbar-actions">
               <button className="btn-add" onClick={() => setIsFormOpen((v) => !v)}>
@@ -176,7 +204,7 @@ function App() {
       {view === "outfit-builder" && (
         <div className="outfit-builder-view">
           <div className="toolbar">
-            <button className="btn-add" onClick={() => setView("wardrobe")}>← Garderobă</button>
+            <button className="btn-add" onClick={() => setView("home")}>← Acasă</button>
             <span className="count-label">Alege piesele pentru ținută</span>
           </div>
 
@@ -199,10 +227,7 @@ function App() {
       {view === "fitting-room" && (
         <div className="fitting-room-view">
           <div className="toolbar">
-            <button
-              className="btn-add"
-              onClick={() => { resetGeneration(); setView("outfit-builder"); }}
-            >
+            <button className="btn-add" onClick={() => { resetGeneration(); setView("outfit-builder"); }}>
               ← Piese alese
             </button>
             <span className="count-label">Alege o ipostază</span>
@@ -235,13 +260,18 @@ function App() {
               {generatedImageUrl && (
                 <div className="generation-result">
                   <img src={generatedImageUrl} alt="Ținută generată" className="generated-image" />
-                  <button className="btn-add" onClick={resetGeneration}>Generează din nou</button>
+                  <div style={{ display: "flex", gap: "0.75rem" }}>
+                    <button className="btn-add" onClick={resetGeneration}>Generează din nou</button>
+                    <button className="btn-add" onClick={() => { resetGeneration(); setView("home"); }}>
+                      Vezi pe Acasă
+                    </button>
+                  </div>
                 </div>
               )}
 
               {generationError && (
                 <div className="generation-error-card">
-                  <p>Cătăina a stricat aplicația!! Ceva nu a mers bine: {generationError}</p>
+                  <p>Ceva nu a mers bine: {generationError}</p>
                   <button className="btn-add" onClick={resetGeneration}>Încearcă din nou</button>
                 </div>
               )}

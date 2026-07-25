@@ -7,3 +7,11 @@ export function generateOutfit(poseId, garmentIds) {
 export function getGeneratedOutfit(id) {
   return apiGet(`/Outfit/${id}`);
 }
+
+export function getAllOutfits() {
+  return apiGet("/Outfit");
+}
+
+export function toggleFavoriteOutfit(id) {
+  return apiPost(`/Outfit/${id}/favorite`, {});
+}

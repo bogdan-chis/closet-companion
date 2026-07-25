@@ -529,3 +529,89 @@ button:focus-visible, input:focus-visible, select:focus-visible {
     50% { opacity: 1; }
   }
 }
+
+.home-dashboard { display: flex; flex-direction: column; gap: 3rem; }
+.home-section { display: flex; flex-direction: column; gap: 1.25rem; }
+.section-title {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin: 0;
+  border-bottom: 1px solid var(--color-line);
+  padding-bottom: 0.75rem;
+}
+
+.shelf-track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+.shelf-item { flex: 0 0 auto; width: 120px; }
+.shelf-image-wrap {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--color-line);
+  margin-bottom: 0.5rem;
+}
+.shelf-image { width: 100%; height: 100%; object-fit: cover; display: block; }
+.shelf-item-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.75rem;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.outfit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.5rem;
+}
+.outfit-card { position: relative; }
+.outfit-card-image-wrap {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--color-line);
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+.outfit-card-image { width: 100%; height: 100%; object-fit: cover; display: block; }
+.outfit-card-date {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--color-stone);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.heart-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--color-ink);
+  transition: transform 0.15s ease;
+}
+.heart-btn:hover { transform: scale(1.1); }
+.heart-btn.heart-active { color: var(--color-danger); }
+
+@media (max-width: 480px) {
+  .shelf-item { width: 100px; }
+  .outfit-grid { grid-template-columns: repeat(2, 1fr); }
+}

@@ -12,5 +12,6 @@ namespace ClosetCompanionApp.Service.Interfaces
         Task<IEnumerable<GeneratedOutfit>> GetAllAsync();
         Task<GeneratedOutfit?> GetByIdAsync(Guid id);
         Task<IEnumerable<GeneratedOutfit>> GetFavouritesAsync();
+        Task ToggleFavoriteAsync(Guid id);
     }
 }

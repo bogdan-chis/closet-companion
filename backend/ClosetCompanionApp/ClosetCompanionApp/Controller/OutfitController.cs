@@ -52,5 +52,13 @@ namespace ClosetCompanionApp.Controller
             await _outfitService.DeleteAsync(id);
             return NoContent();
         }
+
+        [HttpPost("{id}/favorite")]
+        public async Task<IActionResult> ToggleFavorite(Guid id)
+        {
+            await _outfitService.ToggleFavoriteAsync(id);
+            var outfit = await _outfitService.GetByIdAsync(id);
+            return outfit == null ? NotFound() : Ok(outfit);
+        }
     }
 }
