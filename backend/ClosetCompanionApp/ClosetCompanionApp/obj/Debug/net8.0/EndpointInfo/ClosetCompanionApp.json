@@ -65,17 +65,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateOutfitRequest"
+                "$ref": "#/components/schemas/CreateOutfitDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateOutfitRequest"
+                "$ref": "#/components/schemas/CreateOutfitDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateOutfitRequest"
+                "$ref": "#/components/schemas/CreateOutfitDto"
               }
             }
           }
@@ -106,17 +106,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreatePosePhotoRequest"
+                "$ref": "#/components/schemas/CreatePosePhotoDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreatePosePhotoRequest"
+                "$ref": "#/components/schemas/CreatePosePhotoDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreatePosePhotoRequest"
+                "$ref": "#/components/schemas/CreatePosePhotoDto"
               }
             }
           }
@@ -128,38 +128,55 @@
         }
       }
     },
-    "/WeatherForecast": {
-      "get": {
+    "/Storage/upload": {
+      "post": {
         "tags": [
-          "WeatherForecast"
+          "Storage"
         ],
-        "operationId": "GetWeatherForecast",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "folder": {
+                    "type": "string",
+                    "default": "misc"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                },
+                "folder": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
+                  "$ref": "#/components/schemas/UploadResponseDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
+                  "$ref": "#/components/schemas/UploadResponseDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
+                  "$ref": "#/components/schemas/UploadResponseDto"
                 }
               }
             }
@@ -191,7 +208,7 @@
         },
         "additionalProperties": false
       },
-      "CreateOutfitRequest": {
+      "CreateOutfitDto": {
         "type": "object",
         "properties": {
           "posePhotoId": {
@@ -213,7 +230,7 @@
         },
         "additionalProperties": false
       },
-      "CreatePosePhotoRequest": {
+      "CreatePosePhotoDto": {
         "type": "object",
         "properties": {
           "name": {
@@ -253,23 +270,14 @@
         "type": "integer",
         "format": "int32"
       },
-      "WeatherForecast": {
+      "UploadResponseDto": {
         "type": "object",
         "properties": {
-          "date": {
+          "imageUrl": {
             "type": "string",
-            "format": "date"
+            "nullable": true
           },
-          "temperatureC": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "temperatureF": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "summary": {
+          "fileName": {
             "type": "string",
             "nullable": true
           }

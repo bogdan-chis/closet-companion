@@ -20,6 +20,7 @@ builder.Services.AddScoped<IOutfitRepository, OutfitRepository>();
 builder.Services.AddScoped<IGarmentService, GarmentService>();
 builder.Services.AddScoped<IPosePhotoService, PosePhotoService>();
 builder.Services.AddScoped<IOutfitService, OutfitService>();
+builder.Services.AddHttpClient<IStorageService, SupabaseStorageService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
