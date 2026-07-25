@@ -9,14 +9,13 @@
         public bool IsDefault { get; private set; }
         public DateTime AddedOn { get; private set; }
 
-        public PosePhoto(Guid id, string name, PoseCategory poseType, string imageUrl, bool isDefault, DateTime addedOn)
+        public PosePhoto(string name, PoseCategory poseType, string imageUrl, bool isDefault)
         {
-            Id = id;
             Name = name;
             PoseType = poseType;
             ImageUrl = imageUrl;
             IsDefault = isDefault;
-            AddedOn = addedOn;
+            AddedOn = DateTime.UtcNow;
         }
 
         public void SetAsDefault() => IsDefault = true;

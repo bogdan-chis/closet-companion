@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ClosetCompanionApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+56d50752a1e943848e63d22b4308ac2d944060e3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a6edc8c361b1d880f7b4e38a43f65c72d560fcb6")]
 [assembly: System.Reflection.AssemblyProductAttribute("ClosetCompanionApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ClosetCompanionApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
