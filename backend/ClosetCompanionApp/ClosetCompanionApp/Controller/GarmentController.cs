@@ -47,5 +47,19 @@ namespace ClosetCompanionApp.Controller
             }
             return Ok(garment);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteById(Guid id)
+        {
+            var garment = await _service.GetByIdAsync(id);
+            if (garment == null)
+            {
+                return NotFound(new { message = $"Garment with ID {id} was not found." });
+            }
+
+            await _service.DeleteAsync(id);
+            return Ok(new { message = $"Garment with ID {id} was successfully deleted." });
+
+        }
     }
 }

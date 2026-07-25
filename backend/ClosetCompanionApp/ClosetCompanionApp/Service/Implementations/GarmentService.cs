@@ -26,9 +26,9 @@ namespace ClosetCompanionApp.Service.Implementations
             await _repository.AddAsync(garment);
         }
 
-        public Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            await _repository.DeleteAsync(id);
         }
 
         public async Task<IEnumerable<Garment>> GetAllAsync()
