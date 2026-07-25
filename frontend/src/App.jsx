@@ -2,9 +2,13 @@ import { useEffect, useState } from "react";
 import { getGarments, deleteGarment } from "./api/garments";
 import GarmentForm from "./components/GarmentForm";
 import GarmentList from "./components/GarmentList";
+import PasswordGate from "./components/PasswordGate";
 import "./App.css";
 
 function App() {
+  const [unlocked, setUnlocked] = useState(
+    () => sessionStorage.getItem("catalina-closet-unlocked") === "true"
+  );
   const [garments, setGarments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,8 +26,8 @@ function App() {
   }
 
   useEffect(() => {
-    loadGarments();
-  }, []);
+    if (unlocked) loadGarments();
+  }, [unlocked]);
 
   async function handleDelete(id) {
     await deleteGarment(id);
@@ -35,14 +39,18 @@ function App() {
     setIsFormOpen(false);
   }
 
+  if (!unlocked) {
+    return <PasswordGate onUnlock={() => setUnlocked(true)} />;
+  }
+
   const count = garments.length;
   const countLabel = count === 1 ? "1 piesă în garderobă" : `${count} piese în garderobă`;
 
   return (
     <div className="app-shell">
       <header className="masthead">
-        <h1 className="wordmark">Garderoba Cătălinei</h1>
-        <p className="tagline">Hainele ei preferate, într-un singur loc</p>
+        <h1 className="wordmark">Garderoba Catalinei</h1>
+        <p className="tagline">Piesele ei preferate, într-un singur loc</p>
       </header>
 
       <div className="toolbar">
