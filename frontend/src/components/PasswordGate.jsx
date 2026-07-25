@@ -45,7 +45,7 @@ export default function PasswordGate({ onUnlock }) {
 
         <h1 className="gate-title">Garderoba Catalinei</h1>
         <p className="gate-subtitle">
-          Dulapul ăsta e încuiat cu o lămâie 🍋<br />Știi parola?
+          Dulapul ăsta e încuiat! 🍋<br />Știi parola?
         </p>
 
         <form className="gate-form" onSubmit={handleSubmit}>

@@ -56,7 +56,7 @@ function App() {
       <div className="toolbar">
         <span className="count-label">{loading ? "Se încarcă…" : countLabel}</span>
         <button className="btn-add" onClick={() => setIsFormOpen((v) => !v)}>
-          {isFormOpen ? "Închide" : "+ Adaugă piesă"}
+          {isFormOpen ? "Închide" : "+ Adaugă haine"}
         </button>
       </div>
 
