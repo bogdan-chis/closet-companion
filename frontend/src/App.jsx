@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { getGarments, deleteGarment } from "./api/garments";
+import { getPoses, createPose } from "./api/poses";
 import GarmentForm from "./components/GarmentForm";
 import GarmentList from "./components/GarmentList";
+import PoseGallery from "./components/PoseGallery";
 import PasswordGate from "./components/PasswordGate";
 import "./App.css";
 
@@ -9,15 +11,32 @@ function App() {
   const [unlocked, setUnlocked] = useState(
     () => sessionStorage.getItem("catalina-closet-unlocked") === "true"
   );
+  
+  // New state to toggle between views cleanly
+  const [view, setView] = useState("wardrobe"); // "wardrobe" | "fitting-room"
+  
   const [garments, setGarments] = useState([]);
+  const [poses, setPoses] = useState([]);
+  const [selectedPoseId, setSelectedPoseId] = useState(null);
+  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  async function loadGarments() {
+  async function loadData() {
     try {
-      const data = await getGarments();
-      setGarments(data);
+      const [garmentsData, posesData] = await Promise.all([
+        getGarments(),
+        getPoses()
+      ]);
+      
+      setGarments(garmentsData);
+      setPoses(posesData);
+      
+      if (posesData.length > 0) {
+        const defaultPose = posesData.find(p => p.isDefault) || posesData[0];
+        setSelectedPoseId(defaultPose.id);
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -26,7 +45,7 @@ function App() {
   }
 
   useEffect(() => {
-    if (unlocked) loadGarments();
+    if (unlocked) loadData();
   }, [unlocked]);
 
   async function handleDelete(id) {
@@ -39,6 +58,22 @@ function App() {
     setIsFormOpen(false);
   }
 
+  async function handleAddPose({ imageUrl }) {
+    try {
+      const newPose = await createPose({
+        name: "Poză nouă",
+        poseCategory: 0, 
+        imageUrl,
+        isDefault: poses.length === 0 
+      });
+      
+      setPoses((prev) => [...prev, newPose]);
+      setSelectedPoseId(newPose.id);
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
   if (!unlocked) {
     return <PasswordGate onUnlock={() => setUnlocked(true)} />;
   }
@@ -49,22 +84,54 @@ function App() {
   return (
     <div className="app-shell">
       <header className="masthead">
-        <h1 className="wordmark">Garderoba Cătălinei</h1>
+        {/* Clicking the logo acts as a home button */}
+        <h1 
+          className="wordmark" 
+          onClick={() => setView("wardrobe")}
+          style={{ cursor: "pointer" }}
+        >
+          Garderoba Cătălinei
+        </h1>
         <p className="tagline">Hainele ei preferate, într-un singur loc</p>
       </header>
 
-      <div className="toolbar">
-        <span className="count-label">{loading ? "Se încarcă…" : countLabel}</span>
-        <button className="btn-add" onClick={() => setIsFormOpen((v) => !v)}>
-          {isFormOpen ? "Închide" : "+ Adaugă haine"}
-        </button>
-      </div>
+      {view === "wardrobe" ? (
+        <>
+          <div className="toolbar">
+            <span className="count-label">{loading ? "Se încarcă…" : countLabel}</span>
+            <div className="toolbar-actions">
+              <button className="btn-add" onClick={() => setIsFormOpen((v) => !v)}>
+                {isFormOpen ? "Închide" : "+ Adaugă piesă"}
+              </button>
+              <button className="btn-submit btn-generate" onClick={() => setView("fitting-room")}>
+                Generează Ținută
+              </button>
+            </div>
+          </div>
 
-      {isFormOpen && <GarmentForm onGarmentCreated={handleCreated} />}
+          {isFormOpen && <GarmentForm onGarmentCreated={handleCreated} />}
+          {error && <p className="form-error">{error}</p>}
+          {!loading && !error && <GarmentList garments={garments} onDelete={handleDelete} />}
+        </>
+      ) : (
+        <div className="fitting-room-view">
+          <div className="toolbar">
+            <button className="btn-add" onClick={() => setView("wardrobe")}>
+              ← Garderobă
+            </button>
+            <span className="count-label">Virtual Fitting Room</span>
+          </div>
 
-      {error && <p className="form-error">{error}</p>}
-
-      {!loading && !error && <GarmentList garments={garments} onDelete={handleDelete} />}
+          {!loading && !error && (
+            <PoseGallery 
+              poses={poses} 
+              selectedPoseId={selectedPoseId} 
+              onSelectPose={(pose) => setSelectedPoseId(pose.id)} 
+              onAddPose={handleAddPose} 
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }

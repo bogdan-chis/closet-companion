@@ -20,6 +20,10 @@
   margin: 0;
   line-height: 0.95;
   word-break: break-word;
+  transition: opacity 0.2s ease;
+}
+.wordmark:hover {
+  opacity: 0.7;
 }
 
 .tagline {
@@ -38,6 +42,18 @@
   margin-bottom: 2rem;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+/* NEW: Groups the action buttons together */
+.toolbar-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.toolbar-actions button {
+  min-width: 200px;
+  text-align: center;
 }
 
 .count-label {
@@ -63,6 +79,14 @@
   white-space: nowrap;
 }
 .btn-add:hover { background: transparent; color: var(--color-ink); }
+
+/* NEW: Generate button styling */
+.btn-generate {
+  width: auto;
+  margin: 0;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.85rem;
+}
 
 .form-panel {
   border: 1px solid var(--color-line);
@@ -105,7 +129,7 @@
   border-bottom: 1px solid var(--color-line);
   background: transparent;
   padding: 0.6rem 0.1rem;
-  font-size: 1rem; /* 16px avoids iOS auto-zoom on focus */
+  font-size: 1rem; 
   color: var(--color-ink);
   border-radius: 0;
   width: 100%;
@@ -188,10 +212,7 @@
   object-fit: cover;
   display: block;
 }
-/* Grayscale reveal-on-hover only for devices that actually support hover
-   (mouse/trackpad). Touch devices see full color always — hover has no
-   meaningful equivalent there, so gating the effect avoids a permanently
-   grayscale image on phones. */
+
 @media (hover: hover) and (pointer: fine) {
   .garment-image { filter: grayscale(100%); transition: filter 0.35s ease; }
   .garment-card:hover .garment-image { filter: grayscale(0%); }
@@ -231,7 +252,7 @@
 }
 .garment-card:hover .garment-remove,
 .garment-card:focus-within .garment-remove { opacity: 1; }
-/* Touch devices: no hover, so keep it visible but understated */
+
 @media (hover: none) {
   .garment-remove { opacity: 1; background: rgba(255, 255, 255, 0.85); }
 }
@@ -254,8 +275,16 @@
 @media (max-width: 640px) {
   .app-shell { padding: 2rem 1rem 4rem; }
   .field-grid { grid-template-columns: 1fr; gap: 1.1rem; }
-  .toolbar { flex-direction: column; align-items: stretch; }
-  .btn-add { width: 100%; text-align: center; }
+  
+  /* Stack toolbar items on mobile */
+  .toolbar { flex-direction: column; align-items: stretch; gap: 1.5rem; }
+  
+  /* Ensure button group scales properly */
+  .toolbar-actions { flex-direction: column; width: 100%; gap: 0.75rem; }
+  
+  /* Make buttons full width on small screens */
+  .btn-add, .btn-generate { width: 100%; text-align: center; display: block; }
+  
   .form-panel { padding: 1.25rem; }
 }
 
@@ -266,4 +295,46 @@
   }
   .garment-name { font-size: 0.85rem; }
   .garment-ref { font-size: 0.6rem; }
+}
+
+:root {
+  --color-bg: #FAFAF9;
+  --color-ink: #141414;
+  --color-stone: #8A8478;
+  --color-line: #E4E1DA;
+  --color-accent: #6B6456;
+  --color-danger: #B3261E;
+  --font-display: 'Barlow Condensed', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+
+button, input, select {
+  font-family: inherit;
+}
+
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
