@@ -5,6 +5,6 @@
         Top,
         Bottom,
         Dress,
-        Outerwear
+        Shoes
     }
 }

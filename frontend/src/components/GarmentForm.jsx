@@ -68,9 +68,9 @@ export default function GarmentForm({ onGarmentCreated }) {
           >
             <option value="" disabled>Alege</option>
             <option value="0">Top</option>
-            <option value="1">Pantalon</option>
+            <option value="1">Bottom</option>
             <option value="2">Rochie</option>
-            <option value="3">Geacă</option>
+            <option value="3">Pantofi</option>
           </select>
         </div>
 

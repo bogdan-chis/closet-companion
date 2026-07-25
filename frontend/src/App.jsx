@@ -50,7 +50,7 @@ function App() {
     <div className="app-shell">
       <header className="masthead">
         <h1 className="wordmark">Garderoba Cătălinei</h1>
-        <p className="tagline">Piesele ei preferate, într-un singur loc</p>
+        <p className="tagline">Hainele ei preferate, într-un singur loc</p>
       </header>
 
       <div className="toolbar">
