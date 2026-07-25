@@ -27,9 +27,9 @@ namespace ClosetCompanionApp.Repository.Implementations
             return await _context.Garments.ToListAsync();
         }
 
-        public Task<Garment> GetByIdAsync(Guid id)
+        public async Task<Garment?> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.Garments.FindAsync(id);
         }
     }
 }

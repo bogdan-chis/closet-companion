@@ -36,5 +36,16 @@ namespace ClosetCompanionApp.Controller
                 return BadRequest(new { error = ex.Message });
             }
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var garment = await _service.GetByIdAsync(id);
+            if (garment == null)
+            {
+                return NotFound(new { message = $"Garment with ID {id} was not found." });
+            }
+            return Ok(garment);
+        }
     }
 }
