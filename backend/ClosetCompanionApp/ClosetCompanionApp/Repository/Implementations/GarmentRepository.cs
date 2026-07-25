@@ -17,7 +17,7 @@ namespace ClosetCompanionApp.Repository.Implementations
             await _context.SaveChangesAsync();
         }
 
-        Task DeleteAsync(Guid id)
+        public Task DeleteAsync(Guid id)
         {
             throw new NotImplementedException();
         }
@@ -27,7 +27,7 @@ namespace ClosetCompanionApp.Repository.Implementations
             return await _context.Garments.ToListAsync();
         }
 
-        Task<Garment> GetByIdAsync(Guid id)
+        public Task<Garment> GetByIdAsync(Guid id)
         {
             throw new NotImplementedException();
         }

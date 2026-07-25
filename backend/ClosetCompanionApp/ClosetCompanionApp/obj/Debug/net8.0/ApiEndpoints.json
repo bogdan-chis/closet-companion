@@ -1,5 +1,31 @@
 [
   {
+    "ContainingType": "ClosetCompanionApp.Controller.GarmentsController",
+    "Method": "GetAll",
+    "RelativePath": "Garments",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ClosetCompanionApp.Controller.GarmentsController",
+    "Method": "Add",
+    "RelativePath": "Garments",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "ClosetCompanionApp.Controller.CreateGarmentRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ClosetCompanionApp.Controllers.WeatherForecastController",
     "Method": "Get",
     "RelativePath": "WeatherForecast",
