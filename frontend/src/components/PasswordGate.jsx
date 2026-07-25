@@ -43,7 +43,7 @@ export default function PasswordGate({ onUnlock }) {
           </svg>
         </div>
 
-        <h1 className="gate-title">Garderoba Catalinei</h1>
+        <h1 className="gate-title">Garderoba Cătălinei</h1>
         <p className="gate-subtitle">
           Dulapul ăsta e încuiat! 🍋<br />Știi parola?
         </p>
@@ -62,7 +62,7 @@ export default function PasswordGate({ onUnlock }) {
 
         {error && <p className="gate-error">{error}</p>}
 
-        <p className="gate-hint">Psst... e ceva galben, acru și rotund 👀</p>
+        <p className="gate-hint">Psst... e ceva galben, bio și buuuun când e congelat 👀</p>
       </div>
     </div>
   );
