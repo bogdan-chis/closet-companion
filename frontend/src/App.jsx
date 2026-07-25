@@ -49,7 +49,7 @@ function App() {
   return (
     <div className="app-shell">
       <header className="masthead">
-        <h1 className="wordmark">Garderoba Catalinei</h1>
+        <h1 className="wordmark">Garderoba Cătălinei</h1>
         <p className="tagline">Piesele ei preferate, într-un singur loc</p>
       </header>
 
