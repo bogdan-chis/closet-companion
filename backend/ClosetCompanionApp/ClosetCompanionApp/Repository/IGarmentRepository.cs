@@ -8,6 +8,5 @@ namespace ClosetCompanionApp.Repository
         Task DeleteAsync(Guid id);
         Task<Garment> GetByIdAsync(Guid id);
         Task<IEnumerable<Garment>> GetAllAsync();
-
     }
 }
