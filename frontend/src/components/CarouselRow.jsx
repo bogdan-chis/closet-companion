@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const CATEGORY_LABELS = { 0: "Top", 1: "Bottom", 2: "Rochie", 3: "Shoes" };
+const CATEGORY_LABELS = { 0: "Top", 1: "Bottom", 2: "Dress" };
 
 export default function CarouselRow({ categoryId, items, selectedId, onSelect, disabled }) {
   // slides[0] is always the "empty" option

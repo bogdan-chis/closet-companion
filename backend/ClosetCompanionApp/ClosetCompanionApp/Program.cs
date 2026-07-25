@@ -21,6 +21,11 @@ builder.Services.AddScoped<IGarmentService, GarmentService>();
 builder.Services.AddScoped<IPosePhotoService, PosePhotoService>();
 builder.Services.AddScoped<IOutfitService, OutfitService>();
 builder.Services.AddHttpClient<IStorageService, SupabaseStorageService>();
+builder.Services.AddScoped<IAiGenerationService, ReplicateAiGenerationService>();
+builder.Services.AddHttpClient<IAiGenerationService, ReplicateAiGenerationService>();
+builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+builder.Services.AddHostedService<OutfitGenerationBackgroundService>();
+
 
 builder.Services.AddCors(options =>
 {

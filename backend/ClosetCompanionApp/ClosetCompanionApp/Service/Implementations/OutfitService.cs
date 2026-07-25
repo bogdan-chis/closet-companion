@@ -7,45 +7,54 @@ namespace ClosetCompanionApp.Service.Implementations
     public class OutfitService : IOutfitService
     {
         private readonly IOutfitRepository _repository;
+
         public OutfitService(IOutfitRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task AddAsync(Guid posePhotoId, List<Guid> garmentIds, string resultImageUrl)
+        public async Task<GeneratedOutfit> CreatePendingAsync(Guid posePhotoId, List<Guid> garmentIds)
         {
             if (posePhotoId == Guid.Empty)
                 throw new ArgumentException("Pose photo ID cannot be empty.", nameof(posePhotoId));
-
             if (garmentIds == null || garmentIds.Count == 0)
                 throw new ArgumentException("At least one garment ID must be provided.", nameof(garmentIds));
 
-            if (string.IsNullOrWhiteSpace(resultImageUrl))
-                throw new ArgumentException("Result image URL cannot be empty.", nameof(resultImageUrl));
-
-            var outfit = new GeneratedOutfit(posePhotoId, garmentIds, resultImageUrl);
-            
+            var outfit = new GeneratedOutfit(posePhotoId, garmentIds);
             await _repository.AddAsync(outfit);
+            return outfit;
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task MarkProcessingAsync(Guid id)
         {
-            await _repository.DeleteAsync(id);
+            var outfit = await _repository.GetByIdAsync(id);
+            if (outfit == null) return;
+            outfit.MarkProcessing();
+            await _repository.UpdateAsync(outfit);
         }
 
-        public async Task<IEnumerable<GeneratedOutfit>> GetAllAsync()
+        public async Task CompleteAsync(Guid id, string resultImageUrl)
         {
-            return await _repository.GetAllAsync();
+            var outfit = await _repository.GetByIdAsync(id);
+            if (outfit == null) return;
+            outfit.Complete(resultImageUrl);
+            await _repository.UpdateAsync(outfit);
         }
 
-        public async Task<GeneratedOutfit?> GetByIdAsync(Guid id)
+        public async Task FailAsync(Guid id, string errorMessage)
         {
-            return await _repository.GetByIdAsync(id);
+            var outfit = await _repository.GetByIdAsync(id);
+            if (outfit == null) return;
+            outfit.Fail(errorMessage);
+            await _repository.UpdateAsync(outfit);
         }
 
-        public async Task<IEnumerable<GeneratedOutfit>> GetFavouritesAsync()
-        {
-            return await _repository.GetFavoritesAsync();
-        }
+        public async Task DeleteAsync(Guid id) => await _repository.DeleteAsync(id);
+
+        public async Task<IEnumerable<GeneratedOutfit>> GetAllAsync() => await _repository.GetAllAsync();
+
+        public async Task<GeneratedOutfit?> GetByIdAsync(Guid id) => await _repository.GetByIdAsync(id);
+
+        public async Task<IEnumerable<GeneratedOutfit>> GetFavouritesAsync() => await _repository.GetFavoritesAsync();
     }
 }

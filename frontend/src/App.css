@@ -494,3 +494,38 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   transition: background 0.2s ease, color 0.2s ease;
 }
 .coming-soon-close:hover { background: var(--color-ink); color: #fff; }
+
+.generation-panel { margin-top: 1.5rem; text-align: center; }
+
+.generation-status { display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 2rem 1rem; }
+
+.spinner {
+  width: 32px; height: 32px;
+  border: 3px solid var(--color-line);
+  border-top-color: var(--color-ink);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.generation-status p {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-stone);
+  margin: 0;
+}
+
+/* Swap rotation for a gentle pulse under reduced motion — still communicates
+   "in progress," just without continuous spinning motion. */
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: pulse 1.6s ease-in-out infinite;
+    border-top-color: var(--color-line);
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.35; }
+    50% { opacity: 1; }
+  }
+}

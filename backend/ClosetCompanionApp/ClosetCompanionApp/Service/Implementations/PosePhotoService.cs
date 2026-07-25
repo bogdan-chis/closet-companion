@@ -36,9 +36,9 @@ namespace ClosetCompanionApp.Service.Implementations
             return await _repository.GetAllAsync();
         }
 
-        public Task<PosePhoto?> GetByIdAsync(Guid id)
+        public async Task<PosePhoto?> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _repository.GetByIdAsync(id);
         }
     }
 }

@@ -4,10 +4,13 @@ namespace ClosetCompanionApp.Service.Interfaces
 {
     public interface IOutfitService
     {
-        Task AddAsync(Guid posePhotoId, List<Guid> garmentIds, string resultImageUrl);
-        Task<IEnumerable<GeneratedOutfit>> GetAllAsync();
-        Task<IEnumerable<GeneratedOutfit>> GetFavouritesAsync();
-        Task<GeneratedOutfit?> GetByIdAsync(Guid id);
+        Task<GeneratedOutfit> CreatePendingAsync(Guid posePhotoId, List<Guid> garmentIds);
+        Task MarkProcessingAsync(Guid id);
+        Task CompleteAsync(Guid id, string resultImageUrl);
+        Task FailAsync(Guid id, string errorMessage);
         Task DeleteAsync(Guid id);
+        Task<IEnumerable<GeneratedOutfit>> GetAllAsync();
+        Task<GeneratedOutfit?> GetByIdAsync(Guid id);
+        Task<IEnumerable<GeneratedOutfit>> GetFavouritesAsync();
     }
 }

@@ -1,5 +1,6 @@
-﻿using ClosetCompanionApp.Service.Interfaces;
-using ClosetCompanionApp.Dto;
+﻿using ClosetCompanionApp.Dto;
+using ClosetCompanionApp.Service.Implementations;
+using ClosetCompanionApp.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClosetCompanionApp.Controller
@@ -8,27 +9,23 @@ namespace ClosetCompanionApp.Controller
     [Route("[controller]")]
     public class OutfitController : ControllerBase
     {
-        private readonly IOutfitService _service;
+        private readonly IOutfitService _outfitService;
+        private readonly IBackgroundTaskQueue _queue;
 
-        public OutfitController(IOutfitService service)
+        public OutfitController(IOutfitService outfitService, IBackgroundTaskQueue queue)
         {
-            _service = service;
+            _outfitService = outfitService;
+            _queue = queue;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var outfits = await _service.GetAllAsync();
-            return Ok(outfits);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Add([FromBody] CreateOutfitDto Dto)
+        [HttpPost("generate")]
+        public async Task<IActionResult> Generate([FromBody] GenerateOutfitDto dto)
         {
             try
             {
-                await _service.AddAsync(Dto.PosePhotoId, Dto.GarmentIds, Dto.ResultImageUrl);
-                return Ok(new { message = "Outfit saved successfully!" });
+                var outfit = await _outfitService.CreatePendingAsync(dto.PoseId, dto.GarmentIds);
+                _queue.QueueGeneration(outfit.Id);
+                return Accepted(new { id = outfit.Id, status = outfit.Status.ToString() });
             }
             catch (ArgumentException ex)
             {
@@ -39,25 +36,21 @@ namespace ClosetCompanionApp.Controller
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var outfit = await _service.GetByIdAsync(id);
-            if (outfit == null)
-            {
-                return NotFound(new { message = $"Outfit with ID {id} was not found." });
-            }
-            return Ok(outfit);
+            var outfit = await _outfitService.GetByIdAsync(id);
+            return outfit == null ? NotFound() : Ok(outfit);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteById(Guid id)
-        {
-            var outfit = await _service.GetByIdAsync(id);
-            if (outfit == null)
-            {
-                return NotFound(new { message = $"Outfit with ID {id} was not found." });
-            }
+        [HttpGet]
+        public async Task<IActionResult> GetAll() => Ok(await _outfitService.GetAllAsync());
 
-            await _service.DeleteAsync(id);
-            return Ok(new { message = $"Outfit with ID {id} was successfully deleted." });
+        [HttpGet("favorites")]
+        public async Task<IActionResult> GetFavorites() => Ok(await _outfitService.GetFavouritesAsync());
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _outfitService.DeleteAsync(id);
+            return NoContent();
         }
     }
 }

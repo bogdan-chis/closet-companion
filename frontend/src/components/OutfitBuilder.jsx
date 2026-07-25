@@ -1,6 +1,6 @@
 import CarouselRow from "./CarouselRow";
 
-const CATEGORY = { TOP: 0, BOTTOM: 1, DRESS: 2, SHOES: 3 };
+const CATEGORY = { TOP: 0, BOTTOM: 1, DRESS: 2 };
 
 export default function OutfitBuilder({ garments, selection, onChangeSelection }) {
   const byCategory = (id) => garments.filter((g) => g.category === id);
@@ -9,7 +9,6 @@ export default function OutfitBuilder({ garments, selection, onChangeSelection }
   function handleSelect(key, item) {
     const next = { ...selection, [key]: item ? item.id : null };
 
-    // Dress excludes top + bottom, and vice versa
     if (key === "dress" && item) {
       next.top = null;
       next.bottom = null;
@@ -42,12 +41,6 @@ export default function OutfitBuilder({ garments, selection, onChangeSelection }
         items={byCategory(CATEGORY.DRESS)}
         selectedId={selection.dress}
         onSelect={(item) => handleSelect("dress", item)}
-      />
-      <CarouselRow
-        categoryId={CATEGORY.SHOES}
-        items={byCategory(CATEGORY.SHOES)}
-        selectedId={selection.shoes}
-        onSelect={(item) => handleSelect("shoes", item)}
       />
     </div>
   );

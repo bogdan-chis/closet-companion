@@ -46,9 +46,10 @@ namespace ClosetCompanionApp.Repository.Implementations
                 .ToListAsync();
         }
 
-        public Task UpdateAsync(GeneratedOutfit outfit)
+        public async Task UpdateAsync(GeneratedOutfit outfit)
         {
-            throw new NotImplementedException();
+            _context.GeneratedOutfits.Update(outfit);
+            await _context.SaveChangesAsync();
         }
     }
 }
