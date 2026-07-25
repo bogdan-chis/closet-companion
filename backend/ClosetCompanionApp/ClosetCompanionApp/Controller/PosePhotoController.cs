@@ -1,6 +1,7 @@
 ﻿using ClosetCompanionApp.Domain;
-using ClosetCompanionApp.Service.Interfaces;
 using ClosetCompanionApp.Dto;
+using ClosetCompanionApp.Service.Implementations;
+using ClosetCompanionApp.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClosetCompanionApp.Controller
@@ -35,6 +36,19 @@ namespace ClosetCompanionApp.Controller
             {
                 return BadRequest(new { error = ex.Message });
             }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var outfit = await _service.GetByIdAsync(id);
+            if (outfit == null)
+            {
+                return NotFound(new { message = $"BasePhoto with ID {id} was not found." });
+            }
+
+            await _service.DeleteAsync(id);
+            return Ok(new { message = $"BasePhoto with ID {id} was successfully deleted." });
         }
     }
 }

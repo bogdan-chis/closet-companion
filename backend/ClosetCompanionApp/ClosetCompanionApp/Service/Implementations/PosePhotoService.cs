@@ -26,9 +26,9 @@ namespace ClosetCompanionApp.Service.Implementations
             return await _repository.AddAsync(photo);
         }
 
-        public Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            await _repository.DeleteAsync(id);
         }
 
         public async Task<IEnumerable<PosePhoto>> GetAllAsync()

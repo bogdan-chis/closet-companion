@@ -9,12 +9,12 @@ namespace ClosetCompanionApp.Controller
     [Route("[controller]")]
     public class OutfitController : ControllerBase
     {
-        private readonly IOutfitService _outfitService;
+        private readonly IOutfitService _service;
         private readonly IBackgroundTaskQueue _queue;
 
         public OutfitController(IOutfitService outfitService, IBackgroundTaskQueue queue)
         {
-            _outfitService = outfitService;
+            _service = outfitService;
             _queue = queue;
         }
 
@@ -23,7 +23,7 @@ namespace ClosetCompanionApp.Controller
         {
             try
             {
-                var outfit = await _outfitService.CreatePendingAsync(dto.PoseId, dto.GarmentIds);
+                var outfit = await _service.CreatePendingAsync(dto.PoseId, dto.GarmentIds);
                 _queue.QueueGeneration(outfit.Id);
                 return Accepted(new { id = outfit.Id, status = outfit.Status.ToString() });
             }
@@ -36,28 +36,34 @@ namespace ClosetCompanionApp.Controller
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var outfit = await _outfitService.GetByIdAsync(id);
+            var outfit = await _service.GetByIdAsync(id);
             return outfit == null ? NotFound() : Ok(outfit);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll() => Ok(await _outfitService.GetAllAsync());
+        public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
 
         [HttpGet("favorites")]
-        public async Task<IActionResult> GetFavorites() => Ok(await _outfitService.GetFavouritesAsync());
+        public async Task<IActionResult> GetFavorites() => Ok(await _service.GetFavouritesAsync());
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _outfitService.DeleteAsync(id);
-            return NoContent();
+            var outfit = await _service.GetByIdAsync(id);
+            if (outfit == null)
+            {
+                return NotFound(new { message = $"Outfit with ID {id} was not found." });
+            }
+
+            await _service.DeleteAsync(id);
+            return Ok(new { message = $"Outfit with ID {id} was successfully deleted." });
         }
 
         [HttpPost("{id}/favorite")]
         public async Task<IActionResult> ToggleFavorite(Guid id)
         {
-            await _outfitService.ToggleFavoriteAsync(id);
-            var outfit = await _outfitService.GetByIdAsync(id);
+            await _service.ToggleFavoriteAsync(id);
+            var outfit = await _service.GetByIdAsync(id);
             return outfit == null ? NotFound() : Ok(outfit);
         }
     }

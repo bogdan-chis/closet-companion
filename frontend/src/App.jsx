@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getGarments, deleteGarment } from "./api/garments";
-import { getPoses, createPose } from "./api/poses";
-import { generateOutfit, getGeneratedOutfit, getAllOutfits, toggleFavoriteOutfit } from "./api/outfits";
+import { getPoses, createPose, deletePose } from "./api/poses";
+import { generateOutfit, getGeneratedOutfit, getAllOutfits, toggleFavoriteOutfit, deleteOutfit } from "./api/outfits";
 import GarmentForm from "./components/GarmentForm";
 import GarmentList from "./components/GarmentList";
 import PoseGallery from "./components/PoseGallery";
@@ -30,6 +30,7 @@ function App() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const [generationId, setGenerationId] = useState(null);
@@ -37,6 +38,12 @@ function App() {
   const [generatedImageUrl, setGeneratedImageUrl] = useState(null);
   const [generationError, setGenerationError] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // Helper to show floating success toast
+  function showSuccess(message) {
+    setSuccessMessage(message);
+    setTimeout(() => setSuccessMessage(null), 3000);
+  }
 
   async function loadData() {
     try {
@@ -94,8 +101,47 @@ function App() {
   }, [generationId, generationStatus]);
 
   async function handleDelete(id) {
-    await deleteGarment(id);
-    setGarments((prev) => prev.filter((g) => g.id !== id));
+    try {
+      await deleteGarment(id);
+      setGarments((prev) => prev.filter((g) => g.id !== id));
+      const updatedOutfits = await getAllOutfits();
+      setOutfits(updatedOutfits);
+      
+      setError(null);
+      showSuccess("Piesa a fost ștearsă cu succes!");
+    } catch (err) {
+      setError("Eroare la ștergerea piesei: " + err.message);
+    }
+  }
+
+  async function handleDeleteOutfit(id) {
+    try {
+      await deleteOutfit(id);
+      setOutfits((prev) => prev.filter((o) => o.id !== id));
+      
+      setError(null);
+      showSuccess("Ținuta a fost ștearsă cu succes!");
+    } catch (err) {
+      setError("Eroare la ștergerea ținutei: " + err.message);
+    }
+  }
+
+  async function handleDeletePose(id) {
+    try {
+      await deletePose(id);
+      
+      if (selectedPoseId === id) {
+        const remaining = poses.filter((p) => p.id !== id);
+        setSelectedPoseId(remaining.length > 0 ? remaining[0].id : null);
+      }
+      
+      setPoses((prev) => prev.filter((p) => p.id !== id));
+      
+      setError(null);
+      showSuccess("Ipostaza a fost ștearsă cu succes!");
+    } catch (err) {
+      setError("Eroare la ștergerea ipostazei: " + err.message);
+    }
   }
 
   function handleCreated(newGarment) {
@@ -171,13 +217,21 @@ function App() {
       </header>
 
       {view === "home" && (
-        <HomeDashboard
-          garments={garments}
-          outfits={outfits}
-          onToggleFavorite={handleToggleFavorite}
-          onGoToWardrobe={() => setView("wardrobe")}
-          onGoToGenerate={() => setView("outfit-builder")}
-        />
+        <>
+          {error && (
+            <p className="form-error" style={{ textAlign: "center" }}>
+              {error}
+            </p>
+          )}
+          <HomeDashboard
+            garments={garments}
+            outfits={outfits}
+            onToggleFavorite={handleToggleFavorite}
+            onDeleteOutfit={handleDeleteOutfit}
+            onGoToWardrobe={() => setView("wardrobe")}
+            onGoToGenerate={() => setView("outfit-builder")}
+          />
+        </>
       )}
 
       {view === "wardrobe" && (
@@ -239,6 +293,7 @@ function App() {
               selectedPoseId={selectedPoseId}
               onSelectPose={(pose) => setSelectedPoseId(pose.id)}
               onAddPose={handleAddPose}
+              onDeletePose={handleDeletePose}
             />
           )}
 
@@ -277,6 +332,13 @@ function App() {
               )}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Global Toast Popup */}
+      {successMessage && (
+        <div className="toast-popup">
+          ✓ {successMessage}
         </div>
       )}
     </div>

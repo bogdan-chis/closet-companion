@@ -1,7 +1,7 @@
 import GarmentShelf from "./GarmentShelf";
 import OutfitCard, { isCompleted } from "./OutfitCard";
 
-export default function HomeDashboard({ garments, outfits, onToggleFavorite, onGoToWardrobe, onGoToGenerate }) {
+export default function HomeDashboard({ garments, outfits, onToggleFavorite, onDeleteOutfit, onGoToWardrobe, onGoToGenerate }) {
   const completedOutfits = outfits.filter((o) => isCompleted(o.status));
   const favoriteOutfits = completedOutfits.filter((o) => o.isFavorite);
 
@@ -24,7 +24,12 @@ export default function HomeDashboard({ garments, outfits, onToggleFavorite, onG
         ) : (
           <div className="outfit-grid">
             {favoriteOutfits.map((o) => (
-              <OutfitCard key={o.id} outfit={o} onToggleFavorite={onToggleFavorite} />
+              <OutfitCard 
+                key={o.id} 
+                outfit={o} 
+                onToggleFavorite={onToggleFavorite} 
+                // Notice we do NOT pass onDelete here
+              />
             ))}
           </div>
         )}
@@ -42,7 +47,12 @@ export default function HomeDashboard({ garments, outfits, onToggleFavorite, onG
         ) : (
           <div className="outfit-grid">
             {completedOutfits.map((o) => (
-              <OutfitCard key={o.id} outfit={o} onToggleFavorite={onToggleFavorite} />
+              <OutfitCard 
+                key={o.id} 
+                outfit={o} 
+                onToggleFavorite={onToggleFavorite} 
+                onDelete={onDeleteOutfit} // Pass it here so the button shows up!
+              />
             ))}
           </div>
         )}

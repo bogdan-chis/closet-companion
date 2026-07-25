@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "./client";
+import { apiDelete, apiGet, apiPost } from "./client";
 
 export function generateOutfit(poseId, garmentIds) {
   return apiPost("/Outfit/generate", { poseId, garmentIds });
@@ -14,4 +14,8 @@ export function getAllOutfits() {
 
 export function toggleFavoriteOutfit(id) {
   return apiPost(`/Outfit/${id}/favorite`, {});
+}
+
+export function deleteOutfit(id){
+  return apiDelete(`/Outfit/${id}`);
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { uploadFile } from "../api/storage";
 
-export default function PoseGallery({ poses, onSelectPose, onAddPose, selectedPoseId }) {
+export default function PoseGallery({ poses, onSelectPose, onAddPose, selectedPoseId, onDeletePose }) {
   const [isAdding, setIsAdding] = useState(false);
   const [name, setName] = useState("");
   const [category, setCategory] = useState("0");
@@ -70,6 +70,18 @@ export default function PoseGallery({ poses, onSelectPose, onAddPose, selectedPo
                 }}
               >
                 <img className="garment-image" src={pose.imageUrl} alt={pose.name} />
+                
+                {/* NEW: Delete Button */}
+                <button
+                  className="garment-remove"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevents the card from being selected when clicking delete!
+                    onDeletePose(pose.id);
+                  }}
+                  aria-label={`Șterge ipostaza ${pose.name}`}
+                >
+                  Șterge
+                </button>
               </div>
               <h3 className="garment-name" style={{ textAlign: "center", marginBottom: "0.2rem" }}>
                 {selectedPoseId === pose.id ? "✓ Selectat" : "Alege"}
