@@ -1,16 +1,17 @@
 ﻿using ClosetCompanionApp.Domain;
 using ClosetCompanionApp.Service.Interfaces;
+using ClosetCompanionApp.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClosetCompanionApp.Controller
 {
     [ApiController]
     [Route("[controller]")]
-    public class GarmentsController : ControllerBase
+    public class GarmentController : ControllerBase
     {
         private readonly IGarmentService _service;
 
-        public GarmentsController(IGarmentService service)
+        public GarmentController(IGarmentService service)
         {
             _service = service;
         }
@@ -23,11 +24,11 @@ namespace ClosetCompanionApp.Controller
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] CreateGarmentRequest request)
+        public async Task<IActionResult> Add([FromBody] CreateGarmentDto dto)
         {
             try
             {
-                await _service.AddAsync(request.Name, request.Category, request.ImageUrl, request.SourceWebsiteUrl ?? "");
+                await _service.AddAsync(dto.Name, dto.Category, dto.ImageUrl, dto.SourceWebsiteUrl ?? "");
                 return Ok(new { message = "Garment added successfully!" });
             }
             catch (ArgumentException ex)
@@ -35,15 +36,5 @@ namespace ClosetCompanionApp.Controller
                 return BadRequest(new { error = ex.Message });
             }
         }
-    }
-
-    // This is a simple Data Transfer Object (DTO) to define what 
-    // JSON data we expect the client to send us in the POST request.
-    public class CreateGarmentRequest
-    {
-        public string Name { get; set; } = null!;
-        public GarmentCategory Category { get; set; }
-        public string ImageUrl { get; set; } = null!;
-        public string? SourceWebsiteUrl { get; set; }
     }
 }

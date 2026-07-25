@@ -5,10 +5,10 @@
     "version": "1.0"
   },
   "paths": {
-    "/Garments": {
+    "/Garment": {
       "get": {
         "tags": [
-          "Garments"
+          "Garment"
         ],
         "responses": {
           "200": {
@@ -18,23 +18,105 @@
       },
       "post": {
         "tags": [
-          "Garments"
+          "Garment"
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateGarmentRequest"
+                "$ref": "#/components/schemas/CreateGarmentDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateGarmentRequest"
+                "$ref": "#/components/schemas/CreateGarmentDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateGarmentRequest"
+                "$ref": "#/components/schemas/CreateGarmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Outfit": {
+      "get": {
+        "tags": [
+          "Outfit"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Outfit"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOutfitRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOutfitRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOutfitRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/PosePhoto": {
+      "get": {
+        "tags": [
+          "PosePhoto"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "PosePhoto"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePosePhotoRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePosePhotoRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePosePhotoRequest"
               }
             }
           }
@@ -88,7 +170,7 @@
   },
   "components": {
     "schemas": {
-      "CreateGarmentRequest": {
+      "CreateGarmentDto": {
         "type": "object",
         "properties": {
           "name": {
@@ -109,7 +191,59 @@
         },
         "additionalProperties": false
       },
+      "CreateOutfitRequest": {
+        "type": "object",
+        "properties": {
+          "posePhotoId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "garmentIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "nullable": true
+          },
+          "resultImageUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreatePosePhotoRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "poseCategory": {
+            "$ref": "#/components/schemas/PoseCategory"
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "GarmentCategory": {
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "PoseCategory": {
         "enum": [
           0,
           1,

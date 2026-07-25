@@ -33,6 +33,11 @@ namespace ClosetCompanionApp.Service.Implementations
             throw new NotImplementedException();
         }
 
+        public async Task<IEnumerable<GeneratedOutfit>> GetAllAsync()
+        {
+            return await _repository.GetAllAsync();
+        }
+
         public Task<GeneratedOutfit> GetByIdAsync(Guid id)
         {
             throw new NotImplementedException();

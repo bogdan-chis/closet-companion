@@ -1,8 +1,8 @@
 [
   {
-    "ContainingType": "ClosetCompanionApp.Controller.GarmentsController",
+    "ContainingType": "ClosetCompanionApp.Controller.GarmentController",
     "Method": "GetAll",
-    "RelativePath": "Garments",
+    "RelativePath": "Garment",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -10,16 +10,68 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ClosetCompanionApp.Controller.GarmentsController",
+    "ContainingType": "ClosetCompanionApp.Controller.GarmentController",
     "Method": "Add",
-    "RelativePath": "Garments",
+    "RelativePath": "Garment",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "ClosetCompanionApp.Dto.CreateGarmentDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ClosetCompanionApp.Controller.OutfitController",
+    "Method": "GetAll",
+    "RelativePath": "Outfit",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ClosetCompanionApp.Controller.OutfitController",
+    "Method": "Add",
+    "RelativePath": "Outfit",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "request",
-        "Type": "ClosetCompanionApp.Controller.CreateGarmentRequest",
+        "Type": "ClosetCompanionApp.Controller.CreateOutfitRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ClosetCompanionApp.Controller.PosePhotoController",
+    "Method": "GetAll",
+    "RelativePath": "PosePhoto",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ClosetCompanionApp.Controller.PosePhotoController",
+    "Method": "Add",
+    "RelativePath": "PosePhoto",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "ClosetCompanionApp.Controller.CreatePosePhotoRequest",
         "IsRequired": true
       }
     ],
