@@ -39,6 +39,15 @@ function App() {
   const [generationError, setGenerationError] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
+  const [credits, setCredits] = useState(() => {
+    const saved = localStorage.getItem("catalina-closet-credits");
+    return saved !== null ? Number(saved) : 50;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("catalina-closet-credits", credits);
+  }, [credits]);
+
   // Helper to show floating success toast
   function showSuccess(message) {
     setSuccessMessage(message);
@@ -149,11 +158,11 @@ function App() {
     setIsFormOpen(false);
   }
 
-  async function handleAddPose({ imageUrl }) {
+  async function handleAddPose({ name, poseCategory, imageUrl }) {
     try {
       const newPose = await createPose({
-        name: "Poză nouă",
-        poseCategory: 0,
+        name: name,
+        poseCategory: poseCategory,
         imageUrl,
         isDefault: poses.length === 0,
       });
@@ -182,6 +191,11 @@ function App() {
   }
 
   async function handleGenerate() {
+    if (credits <= 0) {
+      setGenerationError("Nu mai ai credite disponibile! Generarea este dezactivată.");
+      return;
+    }
+
     const garmentIds = Object.values(outfitSelection).filter(Boolean);
     if (garmentIds.length === 0 || !selectedPoseId) return;
 
@@ -189,11 +203,15 @@ function App() {
     setGenerationError(null);
     setGeneratedImageUrl(null);
 
+    setCredits((prev) => prev - 1);
+
     try {
       const result = await generateOutfit(selectedPoseId, garmentIds);
       setGenerationId(result.id);
       setGenerationStatus(result.status);
     } catch (err) {
+      // Optional: Refund the credit if the API call instantly fails
+      setCredits((prev) => prev + 1);
       setGenerationError(err.message);
       setIsGenerating(false);
     }
@@ -209,6 +227,9 @@ function App() {
 
   return (
     <div className="app-shell">
+      <div className={`credit-badge ${credits < 5 ? 'credit-danger' : credits < 10 ? 'credit-warning' : ''}`}>
+        ⚡ {credits} {credits === 1 ? 'credit' : 'credite'}
+      </div>
       <header className="masthead">
         <h1 className="wordmark" onClick={() => setView("home")} style={{ cursor: "pointer" }}>
           Garderoba Cătălinei

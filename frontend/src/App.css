@@ -666,3 +666,54 @@ button:focus-visible, input:focus-visible, select:focus-visible {
     text-align: center;
   }
 }
+
+/* --- CREDIT BADGE --- */
+.credit-badge {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: var(--color-ink);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 50px; /* Pill shape */
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  z-index: 100;
+}
+
+/* Warning State (< 10) */
+.credit-badge.credit-warning {
+  background: #f59e0b; /* Amber */
+  color: #fff;
+}
+
+/* Danger State (< 5) */
+.credit-badge.credit-danger {
+  background: var(--color-danger); /* Red */
+  color: #fff;
+  animation: pulse-danger 2s infinite;
+}
+
+@keyframes pulse-danger {
+  0% { box-shadow: 0 0 0 0 rgba(179, 38, 30, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(179, 38, 30, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(179, 38, 30, 0); }
+}
+
+@media (max-width: 640px) {
+  .credit-badge {
+    position: static; /* Let it sit naturally on mobile */
+    display: inline-block;
+    margin: 0 auto 1.5rem;
+  }
+  .masthead {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
