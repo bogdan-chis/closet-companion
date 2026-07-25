@@ -5,11 +5,9 @@ namespace ClosetCompanionApp.Service.Interfaces
     public interface IPosePhotoService
     {
         Task<IEnumerable<PosePhoto>> GetAllAsync();
+        Task<PosePhoto> AddAsync(string name, PoseCategory poseCategory, string imageUrl, bool isDefault = false);
 
-        // Passing raw data for validation
-        Task AddAsync(string name, PoseCategory poseCategory, string imageUrl, bool isDefault = false);
-
-        Task<PosePhoto> GetByIdAsync(Guid id);
+        Task<PosePhoto?> GetByIdAsync(Guid id);
         Task DeleteAsync(Guid id);
     }
 }

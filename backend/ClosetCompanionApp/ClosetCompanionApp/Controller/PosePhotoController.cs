@@ -28,8 +28,8 @@ namespace ClosetCompanionApp.Controller
         {
             try
             {
-                await _service.AddAsync(Dto.Name, Dto.PoseCategory, Dto.ImageUrl, Dto.IsDefault);
-                return Ok(new { message = "Pose photo added successfully!" });
+                var photo = await _service.AddAsync(Dto.Name, Dto.PoseCategory, Dto.ImageUrl, Dto.IsDefault);
+                return Ok(photo);
             }
             catch (ArgumentException ex)
             {

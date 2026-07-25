@@ -13,7 +13,7 @@ namespace ClosetCompanionApp.Service.Implementations
             _repository = repository;
         }
 
-        public async Task AddAsync(string name, PoseCategory poseCategory, string imageUrl, bool isDefault = false)
+        public async Task<PosePhoto> AddAsync(string name, PoseCategory poseCategory, string imageUrl, bool isDefault = false)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Pose photo name cannot be empty.", nameof(name));
@@ -23,7 +23,7 @@ namespace ClosetCompanionApp.Service.Implementations
 
             var photo = new PosePhoto(name, poseCategory, imageUrl, isDefault);
 
-            await _repository.AddAsync(photo);
+            return await _repository.AddAsync(photo);
         }
 
         public Task DeleteAsync(Guid id)
@@ -36,7 +36,7 @@ namespace ClosetCompanionApp.Service.Implementations
             return await _repository.GetAllAsync();
         }
 
-        public Task<PosePhoto> GetByIdAsync(Guid id)
+        public Task<PosePhoto?> GetByIdAsync(Guid id)
         {
             throw new NotImplementedException();
         }
