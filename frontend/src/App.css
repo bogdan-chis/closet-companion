@@ -1,0 +1,269 @@
+.app-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 6rem;
+}
+
+.masthead {
+  text-align: center;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--color-line);
+  margin-bottom: 2.5rem;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: clamp(2rem, 8vw, 4rem);
+  margin: 0;
+  line-height: 0.95;
+  word-break: break-word;
+}
+
+.tagline {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+  margin-top: 0.75rem;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.count-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+}
+
+.btn-add {
+  background: var(--color-ink);
+  color: #fff;
+  border: 1px solid var(--color-ink);
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+}
+.btn-add:hover { background: transparent; color: var(--color-ink); }
+
+.form-panel {
+  border: 1px solid var(--color-line);
+  padding: 1.5rem;
+  margin-bottom: 3rem;
+  background: #fff;
+  animation: reveal 0.25s ease;
+}
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.form-title {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin: 0 0 1.5rem;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.field { display: flex; flex-direction: column; gap: 0.4rem; min-width: 0; }
+.field-full { grid-column: 1 / -1; }
+.field label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-stone);
+}
+.field input[type="text"], .field select {
+  border: none;
+  border-bottom: 1px solid var(--color-line);
+  background: transparent;
+  padding: 0.6rem 0.1rem;
+  font-size: 1rem; /* 16px avoids iOS auto-zoom on focus */
+  color: var(--color-ink);
+  border-radius: 0;
+  width: 100%;
+}
+.field select { cursor: pointer; }
+.field input[type="text"]:focus, .field select:focus {
+  border-bottom-color: var(--color-ink);
+  outline: none;
+}
+
+.dropzone {
+  border: 1px dashed var(--color-line);
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.2s ease;
+}
+.dropzone:hover, .dropzone:focus-within { border-color: var(--color-ink); }
+.dropzone-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-stone);
+}
+.dropzone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.dropzone-filename {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--color-ink);
+  word-break: break-all;
+}
+
+.form-error {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-danger);
+  margin-bottom: 1rem;
+}
+
+.btn-submit {
+  width: 100%;
+  background: var(--color-ink);
+  color: #fff;
+  border: 1px solid var(--color-ink);
+  padding: 0.9rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-submit:not(:disabled):hover { opacity: 0.85; }
+
+.garment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 2rem 1.25rem;
+}
+.garment-card { position: relative; }
+.garment-image-wrap {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--color-line);
+  margin-bottom: 0.85rem;
+}
+.garment-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Grayscale reveal-on-hover only for devices that actually support hover
+   (mouse/trackpad). Touch devices see full color always — hover has no
+   meaningful equivalent there, so gating the effect avoids a permanently
+   grayscale image on phones. */
+@media (hover: hover) and (pointer: fine) {
+  .garment-image { filter: grayscale(100%); transition: filter 0.35s ease; }
+  .garment-card:hover .garment-image { filter: grayscale(0%); }
+}
+
+.garment-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.95rem;
+  margin: 0 0 0.3rem;
+}
+.garment-ref {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--color-stone);
+  text-transform: uppercase;
+  margin: 0;
+}
+.garment-remove {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(255, 255, 255, 0.92);
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  color: var(--color-ink);
+}
+.garment-card:hover .garment-remove,
+.garment-card:focus-within .garment-remove { opacity: 1; }
+/* Touch devices: no hover, so keep it visible but understated */
+@media (hover: none) {
+  .garment-remove { opacity: 1; background: rgba(255, 255, 255, 0.85); }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 1rem;
+  border: 1px dashed var(--color-line);
+}
+.empty-state p {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.8rem;
+  color: var(--color-stone);
+}
+
+/* --- Responsive breakpoints --- */
+
+@media (max-width: 640px) {
+  .app-shell { padding: 2rem 1rem 4rem; }
+  .field-grid { grid-template-columns: 1fr; gap: 1.1rem; }
+  .toolbar { flex-direction: column; align-items: stretch; }
+  .btn-add { width: 100%; text-align: center; }
+  .form-panel { padding: 1.25rem; }
+}
+
+@media (max-width: 420px) {
+  .garment-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 0.85rem;
+  }
+  .garment-name { font-size: 0.85rem; }
+  .garment-ref { font-size: 0.6rem; }
+}
