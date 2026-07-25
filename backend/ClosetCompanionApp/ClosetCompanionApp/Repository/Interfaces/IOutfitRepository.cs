@@ -1,6 +1,6 @@
 ﻿using ClosetCompanionApp.Domain;
 
-namespace ClosetCompanionApp.Repository
+namespace ClosetCompanionApp.Repository.Interfaces
 {
     public interface IOutfitRepository
     {
