@@ -11,10 +11,12 @@ namespace ClosetCompanionApp.Repository.Implementations
         {
             _context = context;
         }
-        public async Task AddAsync(Garment garment)
+        public async Task<Garment> AddAsync(Garment garment)
         {
             await _context.Garments.AddAsync(garment);
             await _context.SaveChangesAsync();
+
+            return garment;
         }
 
         public async Task DeleteAsync(Guid id)

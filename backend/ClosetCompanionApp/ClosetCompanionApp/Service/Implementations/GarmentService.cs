@@ -13,7 +13,7 @@ namespace ClosetCompanionApp.Service.Implementations
             _repository = repository;
         }
         
-        public async Task AddAsync(string name, GarmentCategory category, string imageUrl, string sourceWebsiteUrl = "")
+        public async Task<Garment> AddAsync(string name, GarmentCategory category, string imageUrl, string sourceWebsiteUrl = "")
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Garment name cannot be empty.", nameof(name));
@@ -23,7 +23,7 @@ namespace ClosetCompanionApp.Service.Implementations
 
             var garment = new Garment(name, category, imageUrl, sourceWebsiteUrl);
 
-            await _repository.AddAsync(garment);
+            return await _repository.AddAsync(garment);
         }
 
         public async Task DeleteAsync(Guid id)

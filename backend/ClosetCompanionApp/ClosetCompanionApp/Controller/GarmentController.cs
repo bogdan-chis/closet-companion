@@ -28,8 +28,8 @@ namespace ClosetCompanionApp.Controller
         {
             try
             {
-                await _service.AddAsync(dto.Name, dto.Category, dto.ImageUrl, dto.SourceWebsiteUrl ?? "");
-                return Ok(new { message = "Garment added successfully!" });
+                var newGarment = await _service.AddAsync(dto.Name, dto.Category, dto.ImageUrl, dto.SourceWebsiteUrl ?? "");
+                return Ok(newGarment);
             }
             catch (ArgumentException ex)
             {
