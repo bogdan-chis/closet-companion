@@ -11,6 +11,7 @@ import PasswordGate from "./components/PasswordGate";
 import HomeDashboard from "./components/HomeDashboard";
 import GenerationLoader from "./components/GenerationLoader";
 import AppLoadingScreen from "./components/AppLoadingScreen";
+import ConfirmDialog from "./components/ConfirmDialog";
 import "./App.css";
 
 const EMPTY_SELECTION = { top: null, bottom: null, dress: null };
@@ -43,6 +44,7 @@ function App() {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const [credits, setCredits] = useState(0);
+  const [confirmState, setConfirmState] = useState(null); // { type: 'garment'|'outfit'|'pose', id, label }
 
   // Helper to show floating success toast
   function showSuccess(message) {
@@ -117,52 +119,69 @@ function App() {
     return () => clearInterval(interval);
   }, [generationId, generationStatus]);
 
-  async function handleDelete(id) {
-    try {
-      await deleteGarment(id);
-      setGarments((prev) => prev.filter((g) => g.id !== id));
-      const updatedOutfits = await getAllOutfits();
-      setOutfits(updatedOutfits);
-      
-      setError(null);
-      showSuccess("Piesa a fost ștearsă cu succes!");
-    } catch (err) {
-      setError("Eroare la ștergerea piesei: " + err.message);
-    }
+  function requestDeleteGarment(id) {
+  const garment = garments.find((g) => g.id === id);
+  setConfirmState({ type: "garment", id, label: garment ? garment.name : "această piesă" });
+}
+
+async function performDeleteGarment(id) {
+  try {
+    await deleteGarment(id);
+    setGarments((prev) => prev.filter((g) => g.id !== id));
+    const updatedOutfits = await getAllOutfits();
+    setOutfits(updatedOutfits);
+    setError(null);
+    showSuccess("Piesa a fost ștearsă cu succes!");
+  } catch (err) {
+    setError("Eroare la ștergerea piesei: " + err.message);
   }
+}
 
-  async function handleDeleteOutfit(id) {
-    try {
-      await deleteOutfit(id);
-      setOutfits((prev) => prev.filter((o) => o.id !== id));
-      
-      setError(null);
-      showSuccess("Ținuta a fost ștearsă cu succes!");
-    } catch (err) {
-      setError("Eroare la ștergerea ținutei: " + err.message);
-    }
+function requestDeleteOutfit(id) {
+  setConfirmState({ type: "outfit", id, label: "această ținută" });
+}
+
+async function performDeleteOutfit(id) {
+  try {
+    await deleteOutfit(id);
+    setOutfits((prev) => prev.filter((o) => o.id !== id));
+    setError(null);
+    showSuccess("Ținuta a fost ștearsă cu succes!");
+  } catch (err) {
+    setError("Eroare la ștergerea ținutei: " + err.message);
   }
+}
 
-  async function handleDeletePose(id) {
-    try {
-      await deletePose(id);
-      
-      if (selectedPoseId === id) {
-        const remaining = poses.filter((p) => p.id !== id);
-        setSelectedPoseId(remaining.length > 0 ? remaining[0].id : null);
-      }
-      
-      setPoses((prev) => prev.filter((p) => p.id !== id));
-      
-      const updatedOutfits = await getAllOutfits();
-      setOutfits(updatedOutfits);
+function requestDeletePose(id) {
+  const pose = poses.find((p) => p.id === id);
+  setConfirmState({ type: "pose", id, label: pose ? pose.name : "această ipostază" });
+}
 
+async function performDeletePose(id) {
+  try {
+    await deletePose(id);
+    if (selectedPoseId === id) {
+      const remaining = poses.filter((p) => p.id !== id);
+      setSelectedPoseId(remaining.length > 0 ? remaining[0].id : null);
+    }
+    setPoses((prev) => prev.filter((p) => p.id !== id));
+    const updatedOutfits = await getAllOutfits();
+    setOutfits(updatedOutfits);
     setError(null);
     showSuccess("Ipostaza a fost ștearsă cu succes!");
-    } catch (err) {
-      setError("Eroare la ștergerea ipostazei: " + err.message);
-    }
+  } catch (err) {
+    setError("Eroare la ștergerea ipostazei: " + err.message);
   }
+}
+
+function handleConfirmDelete() {
+  if (!confirmState) return;
+  const { type, id } = confirmState;
+  setConfirmState(null);
+  if (type === "garment") performDeleteGarment(id);
+  else if (type === "outfit") performDeleteOutfit(id);
+  else if (type === "pose") performDeletePose(id);
+}
 
   function handleCreated(newGarment) {
     setGarments((prev) => [...prev, newGarment]);
@@ -266,7 +285,7 @@ function App() {
               garments={garments}
               outfits={outfits}
               onToggleFavorite={handleToggleFavorite}
-              onDeleteOutfit={handleDeleteOutfit}
+              onDeleteOutfit={requestDeleteOutfit}
               onGoToWardrobe={() => setView("wardrobe")}
               onGoToGenerate={() => setView("outfit-builder")}
             />
@@ -291,8 +310,8 @@ function App() {
 
           {isFormOpen && <GarmentForm onGarmentCreated={handleCreated} />}
           {error && <p className="form-error">{error}</p>}
-          {!loading && !error && <GarmentList garments={garments} onDelete={handleDelete} />}
-        </>
+          {!loading && !error && <GarmentList garments={garments} onDelete={requestDeleteGarment} />}        
+          </>
       )}
 
       {view === "outfit-builder" && (
@@ -333,7 +352,7 @@ function App() {
               selectedPoseId={selectedPoseId}
               onSelectPose={(pose) => setSelectedPoseId(pose.id)}
               onAddPose={handleAddPose}
-              onDeletePose={handleDeletePose}
+              onDeletePose={requestDeletePose}
             />
           )}
 
@@ -381,6 +400,14 @@ function App() {
           ✓ {successMessage}
         </div>
       )}
+
+      <ConfirmDialog
+        open={Boolean(confirmState)}
+        title="Ești sigură?"
+        message={confirmState ? `Vrei să ștergi ${confirmState.label}? Această acțiune nu poate fi anulată.` : ""}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setConfirmState(null)}
+      />
     </div>
   );
 }

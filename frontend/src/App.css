@@ -906,3 +906,69 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .cold-start-note { animation: none; }
 }
+
+.confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 20, 20, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 1100;
+  animation: backdrop-fade 0.2s ease;
+}
+
+.confirm-card {
+  background: #fff;
+  max-width: 340px;
+  width: 100%;
+  padding: 1.75rem;
+  text-align: center;
+  animation: lightbox-pop 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+}
+
+.confirm-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 1.05rem;
+  margin: 0 0 0.75rem;
+}
+
+.confirm-message {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--color-stone);
+  margin: 0 0 1.5rem;
+}
+
+.confirm-actions { display: flex; gap: 0.75rem; }
+.confirm-cancel, .confirm-delete {
+  flex: 1;
+  padding: 0.7rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border: 1px solid var(--color-ink);
+}
+.confirm-cancel { background: transparent; color: var(--color-ink); }
+.confirm-delete {
+  background: var(--color-danger);
+  color: #fff;
+  border-color: var(--color-danger);
+  transition: opacity 0.2s ease;
+}
+.confirm-delete:hover { opacity: 0.85; }
+
+@media (prefers-reduced-motion: reduce) {
+  .confirm-backdrop, .confirm-card { animation: none; }
+}
+
+@media (max-width: 420px) {
+  .confirm-actions { flex-direction: column; }
+}
