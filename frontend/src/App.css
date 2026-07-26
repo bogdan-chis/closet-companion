@@ -242,30 +242,6 @@
   text-transform: uppercase;
   margin: 0;
 }
-.garment-remove {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  background: rgba(255, 255, 255, 0.92);
-  border: none;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.35rem 0.6rem;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  color: var(--color-ink);
-}
-.garment-card:hover .garment-remove,
-.garment-card:focus-within .garment-remove { opacity: 1; }
-
-@media (hover: none) {
-  .garment-remove { opacity: 1; background: rgba(255, 255, 255, 0.85); padding: 0.5rem 0.85rem; }
-  .heart-btn { width: 40px; height: 40px; font-size: 1.25rem; }
-  .lightbox-close { width: 44px; height: 44px; }
-}
 
 .empty-state {
   text-align: center;
@@ -285,13 +261,27 @@
 @media (max-width: 640px) {
   .app-shell { padding: 2rem 1rem 4rem; }
   .field-grid { grid-template-columns: 1fr; gap: 1.1rem; }
-  
-  /* Stack toolbar items on mobile */
+
   .toolbar { flex-direction: column; align-items: stretch; gap: 1.5rem; }
-  
-  /* Make buttons full width on small screens */
-  .btn-add, .btn-generate { width: 100%; text-align: center; display: block; }
-  
+
+  .toolbar-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+  .toolbar-actions button {
+    flex: 1 1 auto;   /* overrides the 160px desktop basis so width:100% actually applies */
+    width: 100%;
+  }
+
+  .btn-add, .btn-generate {
+    width: 100%;
+    text-align: center;
+    display: block;
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+  }
+
   .form-panel { padding: 1.25rem; }
 }
 
@@ -347,7 +337,14 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 }
 
 
-.btn-generate { width: auto; padding: 0.75rem 1.5rem; }
+.btn-generate {
+  width: auto;
+  margin: 0;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
 
 .outfit-builder { display: flex; flex-direction: column; gap: 2.5rem; margin-bottom: 3rem; }
 
@@ -982,4 +979,125 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   letter-spacing: 0.03em;
   font-size: 1rem;
   margin: 0 0 0.25rem;
+}
+
+/* --- Garment & outfit card hover/tap feedback --- */
+
+.garment-image-wrap,
+.outfit-card-image-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.garment-image,
+.outfit-card-image {
+  transition: transform 0.4s ease, filter 0.35s ease;
+}
+
+/* "Vezi" overlay — reinforces that the whole image is clickable */
+.garment-image-wrap::after,
+.outfit-card-image-wrap::after {
+  content: "Vezi";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 20, 20, 0.28);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .garment-image-wrap:hover .garment-image,
+  .outfit-card-image-wrap:hover .outfit-card-image {
+    transform: scale(1.06);
+  }
+  .garment-image-wrap:hover::after,
+  .outfit-card-image-wrap:hover::after {
+    opacity: 1;
+  }
+}
+
+/* Touch devices: no hover, so give a tactile press-down effect instead */
+@media (hover: none) {
+  .garment-image-wrap:active .garment-image,
+  .outfit-card-image-wrap:active .outfit-card-image {
+    transform: scale(0.96);
+  }
+  .garment-image-wrap:active::after,
+  .outfit-card-image-wrap:active::after {
+    opacity: 1;
+    transition: opacity 0.1s ease;
+  }
+}
+
+/* Keyboard-focus parity with hover, for accessibility */
+.garment-image-wrap:focus-visible::after,
+.outfit-card-image-wrap:focus-visible::after {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .garment-image,
+  .outfit-card-image {
+    transition: filter 0.35s ease; /* keep grayscale reveal, drop the scale motion */
+  }
+  .garment-image-wrap:hover .garment-image,
+  .outfit-card-image-wrap:hover .outfit-card-image,
+  .garment-image-wrap:active .garment-image,
+  .outfit-card-image-wrap:active .outfit-card-image {
+    transform: none;
+  }
+}
+
+/* --- Photo lift + shadow on hover / press (image only, not the whole card) --- */
+
+.garment-image-wrap,
+.outfit-card-image-wrap {
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .garment-image-wrap:hover,
+  .outfit-card-image-wrap:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 30px rgba(20, 20, 20, 0.18);
+  }
+}
+
+@media (hover: none) {
+  .garment-image-wrap:active,
+  .outfit-card-image-wrap:active {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 24px rgba(20, 20, 20, 0.2);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+}
+
+.garment-image-wrap:focus-visible,
+.outfit-card-image-wrap:focus-visible {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 30px rgba(20, 20, 20, 0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .garment-image-wrap,
+  .outfit-card-image-wrap {
+    transition: box-shadow 0.28s ease;
+  }
+  .garment-image-wrap:hover,
+  .outfit-card-image-wrap:hover,
+  .garment-image-wrap:active,
+  .outfit-card-image-wrap:active,
+  .garment-image-wrap:focus-visible,
+  .outfit-card-image-wrap:focus-visible {
+    transform: none;
+  }
 }
