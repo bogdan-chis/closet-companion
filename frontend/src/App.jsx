@@ -267,10 +267,13 @@ function handleConfirmDelete() {
         ⚡ {credits} {credits === 1 ? 'credit' : 'credite'}
       </div>
       <header className="masthead">
-        <h1 className="wordmark" onClick={() => setView("home")} style={{ cursor: "pointer" }}>
-          Garderoba Cătălinei
-        </h1>
-        <p className="tagline">Hainele ei preferate, într-un singur loc</p>
+        <img
+          src="/logo-header.png"
+          alt="The Wardrobe by Cătălina"
+          className="logo-img"
+          onClick={() => setView("home")}
+          style={{ cursor: "pointer" }}
+        />
       </header>
 
       {view === "home" && (
