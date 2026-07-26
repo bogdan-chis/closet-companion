@@ -1,6 +1,6 @@
 const isCompleted = (s) => s === 2 || s === "Completed";
 
-export default function OutfitCard({ outfit, onToggleFavorite, onDelete, onOpen }) {
+export default function OutfitCard({ outfit, onToggleFavorite, onOpen }) {
   return (
     <div className="outfit-card">
       <div className="outfit-card-image-wrap" onClick={() => onOpen(outfit)} role="button" tabIndex={0}>
@@ -12,16 +12,6 @@ export default function OutfitCard({ outfit, onToggleFavorite, onDelete, onOpen 
         >
           {outfit.isFavorite ? "♥" : "♡"}
         </button>
-
-        {onDelete && (
-          <button
-            className="garment-remove"
-            onClick={(e) => { e.stopPropagation(); onDelete(outfit.id); }}
-            aria-label="Șterge ținuta"
-          >
-            Șterge
-          </button>
-        )}
       </div>
       <p className="outfit-card-date">
         {new Date(outfit.generatedOn).toLocaleDateString("ro-RO")}

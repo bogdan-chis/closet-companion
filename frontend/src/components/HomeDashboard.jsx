@@ -55,7 +55,6 @@ export default function HomeDashboard({ garments, outfits, onToggleFavorite, onD
                 key={o.id}
                 outfit={o}
                 onToggleFavorite={onToggleFavorite}
-                onDelete={onDeleteOutfit}
                 onOpen={setOpenOutfit}
               />
             ))}

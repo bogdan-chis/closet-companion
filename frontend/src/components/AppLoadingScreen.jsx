@@ -54,7 +54,7 @@ export default function AppLoadingScreen() {
 
       {showColdStartNote && (
         <p className="cold-start-note">
-          Serverul gratuit a ațipit un pic — se trezește acum, mai durează câteva secunde 😴
+          Bogdan a ațipit un pic — se trezește acum, mai durează câteva secunde 😴
         </p>
       )}
     </div>
