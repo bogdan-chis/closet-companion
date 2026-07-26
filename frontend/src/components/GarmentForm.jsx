@@ -75,8 +75,7 @@ export default function GarmentForm({ onGarmentCreated }) {
         </div>
 
         <div className="field field-full">
-          <label>Imagine</label>
-          <div className="dropzone">
+          <label className="dropzone">
             <span className="dropzone-label">
               {file ? "Schimbă fișierul" : "Apasă sau trage o imagine"}
             </span>
@@ -87,7 +86,7 @@ export default function GarmentForm({ onGarmentCreated }) {
               required
             />
             {file && <span className="dropzone-filename">{file.name}</span>}
-          </div>
+          </label>
         </div>
       </div>
 

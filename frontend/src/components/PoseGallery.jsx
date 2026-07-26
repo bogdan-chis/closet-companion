@@ -131,8 +131,9 @@ export default function PoseGallery({ poses, onSelectPose, onAddPose, selectedPo
             </div>
 
             <div className="field field-full">
-              <label>Imagine</label>
-              <div className="dropzone">
+              <span style={{ fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>Imagine</span>
+              
+              <label className="dropzone">
                 <span className="dropzone-label">
                   {file ? "Schimbă fișierul" : "Apasă sau trage o imagine"}
                 </span>
@@ -143,7 +144,7 @@ export default function PoseGallery({ poses, onSelectPose, onAddPose, selectedPo
                   required
                 />
                 {file && <span className="dropzone-filename">{file.name}</span>}
-              </div>
+              </label>
             </div>
           </div>
 
