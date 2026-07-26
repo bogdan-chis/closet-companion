@@ -160,6 +160,7 @@ function App() {
   function handleCreated(newGarment) {
     setGarments((prev) => [...prev, newGarment]);
     setIsFormOpen(false);
+    showSuccess("Piesa a fost adăugată cu succes!");
   }
 
   async function handleAddPose({ name, poseCategory, imageUrl }) {
@@ -172,6 +173,9 @@ function App() {
       });
       setPoses((prev) => [...prev, newPose]);
       setSelectedPoseId(newPose.id);
+
+      setError(null);
+      showSuccess("Ipostaza a fost adăugată cu succes!");
     } catch (err) {
       setError(err.message);
     }

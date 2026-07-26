@@ -9,6 +9,7 @@ namespace ClosetCompanionApp.Repository
         public DbSet<PosePhoto> PosePhoto { get; set; }
         public DbSet<GeneratedOutfit> GeneratedOutfits { get; set; }
         public DbSet<OutfitGarment> OutfitGarments { get; set; }
+        public DbSet<AppSetting> AppSettings { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 

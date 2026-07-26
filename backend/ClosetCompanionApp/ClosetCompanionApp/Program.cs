@@ -16,6 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IGarmentRepository, GarmentRepository>();
 builder.Services.AddScoped<IPosePhotoRepository, PosePhotoRepository>();
 builder.Services.AddScoped<IOutfitRepository, OutfitRepository>();
+builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
 
 builder.Services.AddScoped<IGarmentService, GarmentService>();
 builder.Services.AddScoped<IPosePhotoService, PosePhotoService>();
@@ -25,6 +26,7 @@ builder.Services.AddScoped<IAiGenerationService, ReplicateAiGenerationService>()
 builder.Services.AddHttpClient<IAiGenerationService, ReplicateAiGenerationService>();
 builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
 builder.Services.AddHostedService<OutfitGenerationBackgroundService>();
+builder.Services.AddScoped<ISettingsService, SettingsService>();
 
 
 builder.Services.AddCors(options =>

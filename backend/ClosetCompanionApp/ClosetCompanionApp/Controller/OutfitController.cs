@@ -11,11 +11,13 @@ namespace ClosetCompanionApp.Controller
     {
         private readonly IOutfitService _service;
         private readonly IBackgroundTaskQueue _queue;
+        private readonly ISettingsService _settingsService;
 
-        public OutfitController(IOutfitService outfitService, IBackgroundTaskQueue queue)
+        public OutfitController(IOutfitService outfitService, IBackgroundTaskQueue queue, ISettingsService settingsService)
         {
             _service = outfitService;
             _queue = queue;
+            _settingsService = settingsService;
         }
 
         [HttpPost("generate")]
@@ -23,8 +25,16 @@ namespace ClosetCompanionApp.Controller
         {
             try
             {
+                var credits = await _settingsService.GetCreditsAsync();
+                if (credits <= 0)
+                {
+                    return BadRequest("Nu mai ai credite disponibile pentru a genera o ținută.");
+                }
+
                 var outfit = await _service.CreatePendingAsync(dto.PoseId, dto.GarmentIds);
                 _queue.QueueGeneration(outfit.Id);
+
+                await _settingsService.DecrementCreditsAsync();
                 return Accepted(new { id = outfit.Id, status = outfit.Status.ToString() });
             }
             catch (ArgumentException ex)
