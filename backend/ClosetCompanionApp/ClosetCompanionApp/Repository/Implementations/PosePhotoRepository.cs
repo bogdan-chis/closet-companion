@@ -20,22 +20,12 @@ namespace ClosetCompanionApp.Repository.Implementations
 
         public async Task DeleteAsync(Guid id)
         {
-            var associatedOutfits = await _context.GeneratedOutfits
-                .Where(o => o.BasePhotoId == id)
-                .ToListAsync();
-
-            if (associatedOutfits.Any())
-            {
-                _context.GeneratedOutfits.RemoveRange(associatedOutfits);
-            }
-
             var pose = await _context.PosePhoto.FindAsync(id);
             if (pose != null)
             {
                 _context.PosePhoto.Remove(pose);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<PosePhoto>> GetAllAsync()

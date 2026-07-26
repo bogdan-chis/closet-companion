@@ -18,6 +18,12 @@ namespace ClosetCompanionApp.Repository
             modelBuilder.Entity<Garment>().HasKey(g => g.Id);
             modelBuilder.Entity<PosePhoto>().HasKey(p => p.Id);
             modelBuilder.Entity<GeneratedOutfit>().HasKey(o => o.Id);
+
+            modelBuilder.Entity<GeneratedOutfit>()
+                .HasOne<PosePhoto>()
+                .WithMany()
+                .HasForeignKey(o => o.BasePhotoId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
