@@ -36,3 +36,12 @@ export async function apiDelete(path) {
   const response = await fetch(`${BASE_URL}${path}`, { method: "DELETE" });
   return handleResponse(response);
 }
+
+export async function getCredits() {
+  const response = await fetch(`${BASE_URL}/settings/credits`);
+  if (!response.ok) {
+    throw new Error("Nu am putut prelua creditele");
+  }
+  const data = await response.json();
+  return data.credits;
+}

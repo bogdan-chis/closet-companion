@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getGarments, deleteGarment } from "./api/garments";
 import { getPoses, createPose, deletePose } from "./api/poses";
 import { generateOutfit, getGeneratedOutfit, getAllOutfits, toggleFavoriteOutfit, deleteOutfit } from "./api/outfits";
+import { getCredits } from "./api/client";
 import GarmentForm from "./components/GarmentForm";
 import GarmentList from "./components/GarmentList";
 import PoseGallery from "./components/PoseGallery";
@@ -40,14 +41,7 @@ function App() {
   const [generationError, setGenerationError] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const [credits, setCredits] = useState(() => {
-    const saved = localStorage.getItem("catalina-closet-credits");
-    return saved !== null ? Number(saved) : 50;
-  });
-
-  useEffect(() => {
-    localStorage.setItem("catalina-closet-credits", credits);
-  }, [credits]);
+  const [credits, setCredits] = useState(0);
 
   // Helper to show floating success toast
   function showSuccess(message) {
@@ -80,6 +74,18 @@ function App() {
   useEffect(() => {
     if (unlocked) loadData();
   }, [unlocked]);
+
+  useEffect(() => {
+    async function loadCredits() {
+      try {
+        const val = await getCredits();
+        setCredits(val);
+      } catch (err) {
+        console.error("Eroare la încărcarea creditelor:", err);
+      }
+    }
+    loadCredits();
+  }, []);
 
   useEffect(() => {
     if (!generationId) return;
