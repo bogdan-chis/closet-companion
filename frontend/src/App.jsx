@@ -10,6 +10,7 @@ import OutfitBuilder from "./components/OutfitBuilder";
 import PasswordGate from "./components/PasswordGate";
 import HomeDashboard from "./components/HomeDashboard";
 import GenerationLoader from "./components/GenerationLoader";
+import AppLoadingScreen from "./components/AppLoadingScreen";
 import "./App.css";
 
 const EMPTY_SELECTION = { top: null, bottom: null, dress: null };
@@ -258,14 +259,18 @@ function App() {
               {error}
             </p>
           )}
-          <HomeDashboard
-            garments={garments}
-            outfits={outfits}
-            onToggleFavorite={handleToggleFavorite}
-            onDeleteOutfit={handleDeleteOutfit}
-            onGoToWardrobe={() => setView("wardrobe")}
-            onGoToGenerate={() => setView("outfit-builder")}
-          />
+          {loading ? (
+            <AppLoadingScreen />
+          ) : (
+            <HomeDashboard
+              garments={garments}
+              outfits={outfits}
+              onToggleFavorite={handleToggleFavorite}
+              onDeleteOutfit={handleDeleteOutfit}
+              onGoToWardrobe={() => setView("wardrobe")}
+              onGoToGenerate={() => setView("outfit-builder")}
+            />
+          )}
         </>
       )}
 
