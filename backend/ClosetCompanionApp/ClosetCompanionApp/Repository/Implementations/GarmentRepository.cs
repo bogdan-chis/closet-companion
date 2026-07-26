@@ -21,22 +21,12 @@ namespace ClosetCompanionApp.Repository.Implementations
 
         public async Task DeleteAsync(Guid id)
         {
-            var associatedOutfits = await _context.GeneratedOutfits
-                .Where(o => o.SelectedGarmentIds.Contains(id))
-                .ToListAsync();
-
-            if (associatedOutfits.Any())
-            {
-                _context.GeneratedOutfits.RemoveRange(associatedOutfits);
-            }
-
             var garment = await _context.Garments.FindAsync(id);
             if (garment != null)
             {
                 _context.Garments.Remove(garment);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Garment>> GetAllAsync()

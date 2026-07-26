@@ -11,6 +11,8 @@
         public bool IsFavorite { get; private set; }
         public DateTime GeneratedOn { get; private set; }
 
+        private GeneratedOutfit() { SelectedGarmentIds = new List<Guid>(); }
+
         public GeneratedOutfit(Guid basePhotoId, List<Guid> selectedGarmentIds)
         {
             Id = Guid.NewGuid();
@@ -38,5 +40,10 @@
         }
 
         public void ToggleFavorite() => IsFavorite = !IsFavorite;
+
+        internal void HydrateGarmentIds(List<Guid> garmentIds)
+        {
+            SelectedGarmentIds = garmentIds ?? new List<Guid>();
+        }
     }
 }

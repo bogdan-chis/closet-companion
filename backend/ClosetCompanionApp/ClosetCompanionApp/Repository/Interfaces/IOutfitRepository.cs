@@ -10,5 +10,6 @@ namespace ClosetCompanionApp.Repository.Interfaces
         Task<IEnumerable<GeneratedOutfit>> GetAllAsync();
         Task<IEnumerable<GeneratedOutfit>> GetFavoritesAsync();
         Task UpdateAsync(GeneratedOutfit outfit);
+        Task DeleteByGarmentIdAsync(Guid garmentId);
     }
 }
