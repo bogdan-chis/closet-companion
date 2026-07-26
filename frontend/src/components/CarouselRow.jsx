@@ -34,7 +34,7 @@ export default function CarouselRow({ categoryId, items, selectedId, onSelect, d
 
       {items.length === 0 ? (
         <div className="carousel-empty">
-          <p>Nicio piesă în această categorie încă.</p>
+          <p>Niciun articol în această categorie încă.</p>
         </div>
       ) : (
         <>

@@ -43,7 +43,7 @@ export default function GarmentForm({ onGarmentCreated }) {
 
   return (
     <form className="form-panel" onSubmit={handleSubmit}>
-      <h2 className="form-title">Piesă nouă</h2>
+      <h2 className="form-title">Articol nouă</h2>
 
       <div className="field-grid">
         <div className="field">

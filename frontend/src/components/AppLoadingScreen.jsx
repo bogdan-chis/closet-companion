@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 const STAGES = [
   "Se deschide dulapul...",
-  "Se numără piesele...",
+  "Se numără articolele...",
   "Se aranjează ținutele...",
   "Aproape gata...",
 ];

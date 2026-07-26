@@ -2,7 +2,7 @@ export default function GarmentShelf({ garments }) {
   if (garments.length === 0) {
     return (
       <div className="empty-state">
-        <p>Nicio piesă încă</p>
+        <p>Niciun articol încă</p>
       </div>
     );
   }

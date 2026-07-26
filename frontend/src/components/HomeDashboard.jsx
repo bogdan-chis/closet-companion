@@ -40,7 +40,7 @@ export default function HomeDashboard({ garments, outfits, onToggleFavorite, onD
       </section>
 
       <section className="home-section">
-        <h2 className="section-title">Piesele tale</h2>
+        <h2 className="section-title">Articolele tale</h2>
         <GarmentShelf garments={garments} />
       </section>
 

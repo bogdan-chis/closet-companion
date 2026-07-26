@@ -12,6 +12,7 @@ import HomeDashboard from "./components/HomeDashboard";
 import GenerationLoader from "./components/GenerationLoader";
 import AppLoadingScreen from "./components/AppLoadingScreen";
 import ConfirmDialog from "./components/ConfirmDialog";
+import GarmentLightbox from "./components/GarmentLightbox";
 import "./App.css";
 
 const EMPTY_SELECTION = { top: null, bottom: null, dress: null };
@@ -45,6 +46,7 @@ function App() {
 
   const [credits, setCredits] = useState(0);
   const [confirmState, setConfirmState] = useState(null); // { type: 'garment'|'outfit'|'pose', id, label }
+  const [openGarment, setOpenGarment] = useState(null);
 
   // Helper to show floating success toast
   function showSuccess(message) {
@@ -121,7 +123,7 @@ function App() {
 
   function requestDeleteGarment(id) {
   const garment = garments.find((g) => g.id === id);
-  setConfirmState({ type: "garment", id, label: garment ? garment.name : "această piesă" });
+  setConfirmState({ type: "garment", id, label: garment ? garment.name : "acest articol" });
 }
 
 async function performDeleteGarment(id) {
@@ -131,9 +133,9 @@ async function performDeleteGarment(id) {
     const updatedOutfits = await getAllOutfits();
     setOutfits(updatedOutfits);
     setError(null);
-    showSuccess("Piesa a fost ștearsă cu succes!");
+    showSuccess("Articolul a fost ștearsă cu succes!");
   } catch (err) {
-    setError("Eroare la ștergerea piesei: " + err.message);
+    setError("Eroare la ștergerea articolului: " + err.message);
   }
 }
 
@@ -186,7 +188,7 @@ function handleConfirmDelete() {
   function handleCreated(newGarment) {
     setGarments((prev) => [...prev, newGarment]);
     setIsFormOpen(false);
-    showSuccess("Piesa a fost adăugată cu succes!");
+    showSuccess("Articolul a fost adăugată cu succes!");
   }
 
   async function handleAddPose({ name, poseCategory, imageUrl }) {
@@ -256,7 +258,7 @@ function handleConfirmDelete() {
   }
 
   const count = garments.length;
-  const countLabel = count === 1 ? "1 piesă în garderobă" : `${count} piese în garderobă`;
+  const countLabel = count === 1 ? "1 articol în garderobă" : `${count} articole în garderobă`;
   const hasAnySelection = Object.values(outfitSelection).some(Boolean);
 
   return (
@@ -300,7 +302,7 @@ function handleConfirmDelete() {
             <span className="count-label">{loading ? "Se încarcă…" : countLabel}</span>
             <div className="toolbar-actions">
               <button className="btn-add" onClick={() => setIsFormOpen((v) => !v)}>
-                {isFormOpen ? "Închide" : "+ Adaugă piesă"}
+                {isFormOpen ? "Închide" : "+ Adaugă articol"}
               </button>
               <button className="btn-submit btn-generate" onClick={() => setView("outfit-builder")}>
                 Generează Ținută
@@ -310,7 +312,7 @@ function handleConfirmDelete() {
 
           {isFormOpen && <GarmentForm onGarmentCreated={handleCreated} />}
           {error && <p className="form-error">{error}</p>}
-          {!loading && !error && <GarmentList garments={garments} onDelete={requestDeleteGarment} />}        
+          {!loading && !error && <GarmentList garments={garments} onOpen={setOpenGarment} />}          
           </>
       )}
 
@@ -318,7 +320,7 @@ function handleConfirmDelete() {
         <div className="outfit-builder-view">
           <div className="toolbar">
             <button className="btn-add" onClick={() => setView("home")}>← Acasă</button>
-            <span className="count-label">Alege piesele pentru ținută</span>
+            <span className="count-label">Alege articolele pentru ținută</span>
           </div>
 
           {!loading && !error && (
@@ -341,7 +343,7 @@ function handleConfirmDelete() {
         <div className="fitting-room-view">
           <div className="toolbar">
             <button className="btn-add" onClick={() => { resetGeneration(); setView("outfit-builder"); }}>
-              ← Piese alese
+              ← Articole alese
             </button>
             <span className="count-label">Alege o ipostază</span>
           </div>
@@ -407,6 +409,12 @@ function handleConfirmDelete() {
         message={confirmState ? `Vrei să ștergi ${confirmState.label}? Această acțiune nu poate fi anulată.` : ""}
         onConfirm={handleConfirmDelete}
         onCancel={() => setConfirmState(null)}
+      />
+
+      <GarmentLightbox
+        garment={garments.find((g) => g.id === openGarment?.id) || null}
+        onClose={() => setOpenGarment(null)}
+        onDelete={requestDeleteGarment}
       />
     </div>
   );
