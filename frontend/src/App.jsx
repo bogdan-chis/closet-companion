@@ -350,6 +350,7 @@ function handleConfirmDelete() {
             </button>
             <span className="count-label">Alege o ipostază</span>
           </div>
+          {error && <p className="form-error">{error}</p>}
 
           {!loading && !error && (
             <PoseGallery

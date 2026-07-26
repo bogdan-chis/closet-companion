@@ -1115,3 +1115,27 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 @media (max-width: 480px) {
   .logo-img { max-width: 240px; }
 }
+
+.pose-expand-btn {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--color-ink);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 3; /* sits above the hover overlay unconditionally */
+}
+.garment-card:hover .pose-expand-btn,
+.garment-card:focus-within .pose-expand-btn { opacity: 1; }
+
+@media (hover: none) {
+  .pose-expand-btn { opacity: 1; }
+}
