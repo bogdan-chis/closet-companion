@@ -1,4 +1,4 @@
-const CATEGORY_LABELS = ["Top", "Bottom", "Dress", "Shoes"];
+const CATEGORY_LABELS = ["Top", "Bottom", "Dress"];
 
 export default function GarmentList({ garments, onDelete }) {
   if (garments.length === 0) {

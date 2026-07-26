@@ -1,23 +1,22 @@
 const isCompleted = (s) => s === 2 || s === "Completed";
 
-export default function OutfitCard({ outfit, onToggleFavorite, onDelete }) {
+export default function OutfitCard({ outfit, onToggleFavorite, onDelete, onOpen }) {
   return (
     <div className="outfit-card">
-      <div className="outfit-card-image-wrap">
+      <div className="outfit-card-image-wrap" onClick={() => onOpen(outfit)} role="button" tabIndex={0}>
         <img className="outfit-card-image" src={outfit.resultImageUrl} alt="Ținută generată" />
         <button
           className={`heart-btn ${outfit.isFavorite ? "heart-active" : ""}`}
-          onClick={() => onToggleFavorite(outfit.id)}
+          onClick={(e) => { e.stopPropagation(); onToggleFavorite(outfit.id); }}
           aria-label={outfit.isFavorite ? "Elimină din favorite" : "Adaugă la favorite"}
         >
           {outfit.isFavorite ? "♥" : "♡"}
         </button>
-        
-        {/* Conditionally render the delete button only if onDelete is provided */}
+
         {onDelete && (
           <button
             className="garment-remove"
-            onClick={() => onDelete(outfit.id)}
+            onClick={(e) => { e.stopPropagation(); onDelete(outfit.id); }}
             aria-label="Șterge ținuta"
           >
             Șterge

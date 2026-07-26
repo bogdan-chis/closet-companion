@@ -1,9 +1,18 @@
+import { useState } from "react";
 import GarmentShelf from "./GarmentShelf";
 import OutfitCard, { isCompleted } from "./OutfitCard";
+import OutfitLightbox from "./OutfitLightbox";
 
 export default function HomeDashboard({ garments, outfits, onToggleFavorite, onDeleteOutfit, onGoToWardrobe, onGoToGenerate }) {
+  const [openOutfit, setOpenOutfit] = useState(null);
+
   const completedOutfits = outfits.filter((o) => isCompleted(o.status));
   const favoriteOutfits = completedOutfits.filter((o) => o.isFavorite);
+
+  // Keep the lightbox showing fresh data (e.g. heart toggled) while it's open
+  const liveOpenOutfit = openOutfit
+    ? completedOutfits.find((o) => o.id === openOutfit.id) || null
+    : null;
 
   return (
     <div className="home-dashboard">
@@ -24,12 +33,7 @@ export default function HomeDashboard({ garments, outfits, onToggleFavorite, onD
         ) : (
           <div className="outfit-grid">
             {favoriteOutfits.map((o) => (
-              <OutfitCard 
-                key={o.id} 
-                outfit={o} 
-                onToggleFavorite={onToggleFavorite} 
-                // Notice we do NOT pass onDelete here
-              />
+              <OutfitCard key={o.id} outfit={o} onToggleFavorite={onToggleFavorite} onOpen={setOpenOutfit} />
             ))}
           </div>
         )}
@@ -47,16 +51,24 @@ export default function HomeDashboard({ garments, outfits, onToggleFavorite, onD
         ) : (
           <div className="outfit-grid">
             {completedOutfits.map((o) => (
-              <OutfitCard 
-                key={o.id} 
-                outfit={o} 
-                onToggleFavorite={onToggleFavorite} 
-                onDelete={onDeleteOutfit} // Pass it here so the button shows up!
+              <OutfitCard
+                key={o.id}
+                outfit={o}
+                onToggleFavorite={onToggleFavorite}
+                onDelete={onDeleteOutfit}
+                onOpen={setOpenOutfit}
               />
             ))}
           </div>
         )}
       </section>
+
+      <OutfitLightbox
+        outfit={liveOpenOutfit}
+        onClose={() => setOpenOutfit(null)}
+        onToggleFavorite={onToggleFavorite}
+        onDelete={onDeleteOutfit}
+      />
     </div>
   );
 }

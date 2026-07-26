@@ -8,6 +8,7 @@ import PoseGallery from "./components/PoseGallery";
 import OutfitBuilder from "./components/OutfitBuilder";
 import PasswordGate from "./components/PasswordGate";
 import HomeDashboard from "./components/HomeDashboard";
+import GenerationLoader from "./components/GenerationLoader";
 import "./App.css";
 
 const EMPTY_SELECTION = { top: null, bottom: null, dress: null };
@@ -146,8 +147,11 @@ function App() {
       
       setPoses((prev) => prev.filter((p) => p.id !== id));
       
-      setError(null);
-      showSuccess("Ipostaza a fost ștearsă cu succes!");
+      const updatedOutfits = await getAllOutfits();
+      setOutfits(updatedOutfits);
+
+    setError(null);
+    showSuccess("Ipostaza a fost ștearsă cu succes!");
     } catch (err) {
       setError("Eroare la ștergerea ipostazei: " + err.message);
     }
@@ -328,8 +332,8 @@ function App() {
 
               {isGenerating && (
                 <div className="generation-status">
-                  <div className="spinner" />
-                  <p>Se generează ținuta... poate dura până la un minut.</p>
+                  <GenerationLoader />
+                  <p>Poate dura până la un minut.</p>
                 </div>
               )}
 
